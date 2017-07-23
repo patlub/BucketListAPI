@@ -10,7 +10,7 @@ def Env_name(env):
 
 
 Env_name('DevelopmentEnv')
-databases = SQLAlchemy(app)
+db = SQLAlchemy(app)
 
 
 @app.route('/')
