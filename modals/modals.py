@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from BucketListAPI import db
+from api.__init__ import db
 
 
 class User(db.Model):
@@ -14,10 +14,10 @@ class User(db.Model):
     password = db.Column(db.String(200))
     bucket = db.relationship('Bucket', backref='user')
 
-    def __init__(self, name, email, password):
-        self.name = name
+    def __init__(self, email, password, name=None):
         self.email = email
         self.password = password
+        self.name = name
 
     def save(self):
         """

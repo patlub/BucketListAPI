@@ -11,12 +11,3 @@ def Env_name(env):
 
 Env_name('DevelopmentEnv')
 db = SQLAlchemy(app)
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
-    app.run()
