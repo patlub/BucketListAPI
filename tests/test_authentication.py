@@ -2,7 +2,8 @@ import unittest
 
 from flask import json
 
-from BucketListAPI import app, Env_name, db
+from api.__init__ import app, Env_name, db
+
 
 class AuthenticationTestCase(unittest.TestCase):
     def setUp(self):
@@ -11,11 +12,12 @@ class AuthenticationTestCase(unittest.TestCase):
         db.create_all()
 
     def tearDown(self):
+        pass
         db.session.remove()
         db.drop_all()
 
     def test_unavailable_request(self):
-        data = json.dumps({'username' : 'patrick', 'password' : 'secret'})
+        data = json.dumps({'username': 'patrick', 'password': 'secret'})
         response = self.app.post()
         # self.assertEqual(True, False)
 
