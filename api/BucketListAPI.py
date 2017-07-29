@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
 from modals.modals import User, Bucket, Item
-from api.__init__ import app, db
+from api.__init__ import create_app, db
+
+app = create_app('DevelopmentEnv')
 
 
 @app.errorhandler(404)
