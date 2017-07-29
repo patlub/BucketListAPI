@@ -26,6 +26,19 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @staticmethod
+    def get_all():
+        """Get all Users"""
+        return User.query.all()
+
+    def delete(self):
+        """Delete User"""
+        db.session.delete(self)
+        db.session.commit()
+
+    def __repr__(self) -> str:
+        return "<User: {}>".format(self.name)
+
 
 class Bucket(db.Model):
     """
@@ -49,6 +62,19 @@ class Bucket(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @staticmethod
+    def get_all():
+        """Get all Buckets"""
+        Bucket.query.all()
+
+    def delete(self):
+        """Delete Bucket"""
+        db.session.delete(self)
+        db.session.commit()
+
+    def __repr__(self) -> str:
+        return "<Bucket: {}>".format(self.name)
+
 
 class Item(db.Model):
     """
@@ -70,3 +96,16 @@ class Item(db.Model):
         """
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def get_all():
+        """Get all Items"""
+        Item.query.all()
+
+    def delete(self):
+        """Delete Item"""
+        db.session.delete(self)
+        db.session.commit()
+
+    def __repr__(self) -> str:
+        return "<Item: {}>".format(self.name)
