@@ -14,13 +14,13 @@ class MainConfiguration(object):
 class TestingEnvironment(MainConfiguration):
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://@localhost/testing_db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/test_db'
 
 
 class DevelopmentEnvironment(MainConfiguration):
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://@localhost/bucketList_db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/flask_api'
 
 
 class ProductionEnvironment(MainConfiguration):
