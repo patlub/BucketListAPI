@@ -44,6 +44,7 @@ class Bucket(db.Model):
     """
     Bucket database Modal
     """
+    __table_name = 'buckets'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     desc = db.Column(db.String(100))
@@ -80,6 +81,7 @@ class Item(db.Model):
     """
     Item Database Modal
     """
+    __table_name = 'items'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
     status = db.Column(db.String(5))
