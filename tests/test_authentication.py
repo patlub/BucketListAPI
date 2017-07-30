@@ -1,25 +1,27 @@
 import unittest
-
 from flask import json
-
-from api.__init__ import app, Env_name, db
+from api import create_app, db
 
 
 class AuthenticationTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = app.test_client()
-        Env_name('TestingEnv')
-        db.create_all()
+        self.app = create_app(config_name='TestingEnv')
+        self.client = self.app.test_client()
+
+        # Binds the app to current context
+        with self.app.app_context():
+            # Create all tables
+            db.create_all()
 
     def tearDown(self):
-        pass
-        db.session.remove()
-        db.drop_all()
+        # Drop all tables
+        with self.app.app_context():
+            # Drop all tables
+            db.session.remove()
+            db.drop_all()
 
-    def test_unavailable_request(self):
-        data = json.dumps({'username': 'patrick', 'password': 'secret'})
-        response = self.app.post()
-        # self.assertEqual(True, False)
+    def test_something(self):
+        self.assertTrue(1)
 
 
 if __name__ == '__main__':
