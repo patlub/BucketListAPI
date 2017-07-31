@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from modals.modals import User, Bucket, Item
 from api import create_app, db
-
+from validate_email import validate_email
 app = create_app('DevelopmentEnv')
 
 
@@ -22,6 +22,11 @@ def register():
 
         if not name or not email or not password:
             response = jsonify({'Error': 'Missing Values'})
+            response.status_code = 400
+            return response
+
+        if not validate_email(email):
+            response = jsonify({'Error': 'Invalid Email'})
             response.status_code = 400
             return response
 
