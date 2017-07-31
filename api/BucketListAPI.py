@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from modals.modals import User, Bucket, Item
 from api import create_app, db
 from validate_email import validate_email
+
 app = create_app('DevelopmentEnv')
 
 
@@ -29,6 +30,12 @@ def register():
             response = jsonify({'Error': 'Invalid Email'})
             response.status_code = 400
             return response
+
+        if len(password) < 6:
+            response = jsonify({'Error': 'Password is short'})
+            response.status_code = 400
+            return response
+
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
