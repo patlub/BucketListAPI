@@ -12,6 +12,24 @@ def index():
     return response
 
 
+@app.route('/auth/register', methods=['POST'])
+def register():
+    request.get_json(force=True)
+    try:
+        name = request.json['name']
+        email = request.json['email']
+        password = request.json['password']
+
+        if not name or not email or not password:
+            response = jsonify({'Error': 'Missing Values'})
+            response.status_code = 400
+            return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
 
 if __name__ == '__main__':
     app.run()
