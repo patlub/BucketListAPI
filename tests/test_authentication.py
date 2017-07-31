@@ -1,27 +1,31 @@
 import unittest
 from flask import json
-from api import create_app, db
+from api import db
+from api.BucketListAPI import app
+from instance.config import application_config
 
 
 class AuthenticationTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = create_app(config_name='TestingEnv')
-        self.client = self.app.test_client()
+        app.config.from_object(application_config['TestingEnv'])
+        self.client = app.test_client()
 
         # Binds the app to current context
-        with self.app.app_context():
+        with app.app_context():
             # Create all tables
             db.create_all()
 
+    def test_index_route(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 201)
+        self.assertIn('Welcome Message', response.data.decode())
+
     def tearDown(self):
         # Drop all tables
-        with self.app.app_context():
+        with app.app_context():
             # Drop all tables
             db.session.remove()
             db.drop_all()
-
-    def test_something(self):
-        self.assertTrue(1)
 
 
 if __name__ == '__main__':
