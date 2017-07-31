@@ -36,11 +36,22 @@ class AuthenticationTestCase(unittest.TestCase):
         user = json.dumps({
             'name': 'Patrick',
             'email': 'pato',
-            'password': 'pat'
+            'password': 'patrick'
         })
         response = self.client.post('/auth/register', data=user)
         self.assertEqual(response.status_code, 400)
         self.assertIn('Invalid Email', response.data.decode())
+
+    def test_registration_with_short_password(self):
+        """Should return invalid email"""
+        user = json.dumps({
+            'name': 'Patrick',
+            'email': 'pato@gmail.com',
+            'password': 'pato'
+        })
+        response = self.client.post('/auth/register', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Password is short', response.data.decode())
 
     def tearDown(self):
         # Drop all tables
