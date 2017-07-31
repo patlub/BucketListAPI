@@ -31,6 +31,17 @@ class AuthenticationTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn('Missing', response.data.decode())
 
+    def test_registration_with_invalid_email(self):
+        """Should return invalid email"""
+        user = json.dumps({
+            'name': 'Patrick',
+            'email': 'pato',
+            'password': 'pat'
+        })
+        response = self.client.post('/auth/register', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Invalid Email', response.data.decode())
+
     def tearDown(self):
         # Drop all tables
         with app.app_context():
