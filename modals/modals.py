@@ -17,13 +17,10 @@ class UserModal(db.Model):
     def __init__(self, email, password, name=None):
         self.email = email
         self.name = name
-        self.set_password(password)
+        self.password = generate_password_hash(password)
 
-    def set_password(self, password):
-        self.pw_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.pw_hash, password)
+    def check_password(self, hash, password):
+        return check_password_hash(hash, password)
 
     def save(self):
         """
