@@ -4,13 +4,21 @@ from modals.modals import UserModal
 
 
 class User(object):
+    """
+    Handles all user operations
+    """
+
     def __init__(self, email, password, name=None):
         self.email = email
         self.name = name
         self.password = password
 
     def register(self):
-
+        """
+        Registers a new user to the application
+        and returns an API response with status
+        code set to 201 on success
+        """
         if not self.name or not self.email or not self.password:
             response = jsonify({'Error': 'Missing Values'})
             response.status_code = 400
@@ -42,6 +50,11 @@ class User(object):
         return response
 
     def login(self):
+        """
+        logs in an existing user to the application
+        and returns an API response with status
+        code set to 201 on success
+        """
         if not self.email or not self.password:
             response = jsonify({'Error': 'Missing login credentials'})
             response.status_code = 400
@@ -53,9 +66,11 @@ class User(object):
             return response
 
         user = UserModal(email=self.email, password=self.password)
-        userdata = user.query.filter_by(email=self.email).first()
-        if userdata and user.check_password(userdata.password,
-                                            self.password):
+        user_data = user.query.filter_by(email=self.email).first()
+
+        # If Login successful
+        if user_data and user.check_password(user_data.password,
+                                             self.password):
             response = jsonify({
                 'Status': user.email + ' Login Successful',
                 'id': user.id
@@ -63,4 +78,6 @@ class User(object):
             response.status_code = 201
             return response
 
-
+        response = jsonify({'Error': 'Incorrect email or password'})
+        response.status_code = 400
+        return response
