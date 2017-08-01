@@ -96,6 +96,19 @@ class AuthenticationTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn('Enter valid email', response.data.decode())
 
+    def test_incorrect_login_credentials(self):
+        """Should check for valid email"""
+
+        # First of all register
+        self.test_successfull_registration()
+        user = json.dumps({
+            'email': 'incorrect@gmail.com',
+            'password': 'incorrect'
+        })
+        response = self.client.post('/auth/login', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Incorrect email or password', response.data.decode())
+
     def test_successful_login(self):
         """Should check for valid email"""
 
