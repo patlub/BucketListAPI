@@ -40,3 +40,14 @@ class User(object):
         })
         response.status_code = 201
         return response
+
+    def login(self):
+        if not self.email or not self.password:
+            response = jsonify({'Error': 'Missing login credentials'})
+            response.status_code = 400
+            return response
+
+        if not validate_email(self.email):
+            response = jsonify({'Error': 'Enter valid email'})
+            response.status_code = 400
+            return response
