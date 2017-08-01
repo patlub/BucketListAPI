@@ -53,6 +53,17 @@ class AuthenticationTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn('Password is short', response.data.decode())
 
+    def test_successfull_registration(self):
+        """Should register user successfully"""
+        user = json.dumps({
+            'name': 'Patrick',
+            'email': 'pato@gmail.com',
+            'password': 'patrickluboobi'
+        })
+        response = self.client.post('/auth/register', data=user)
+        self.assertEqual(response.status_code, 201)
+        self.assertIn('Successfully registered', response.data.decode())
+
     def tearDown(self):
         # Drop all tables
         with app.app_context():
