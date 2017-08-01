@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, \
     check_password_hash
 
 
-class User(db.Model):
+class UserModal(db.Model):
     """
     User Database Modal
     """
@@ -36,7 +36,7 @@ class User(db.Model):
     @staticmethod
     def get_all():
         """Get all Users"""
-        return User.query.all()
+        return UserModal.query.all()
 
     def delete(self):
         """Delete User"""
@@ -47,7 +47,7 @@ class User(db.Model):
         return "<User: {}>".format(self.name)
 
 
-class Bucket(db.Model):
+class BucketModal(db.Model):
     """
     Bucket database Modal
     """
@@ -72,7 +72,7 @@ class Bucket(db.Model):
     @staticmethod
     def get_all():
         """Get all Buckets"""
-        Bucket.query.all()
+        BucketModal.query.all()
 
     def delete(self):
         """Delete Bucket"""
@@ -83,7 +83,7 @@ class Bucket(db.Model):
         return "<Bucket: {}>".format(self.name)
 
 
-class Item(db.Model):
+class ItemModal(db.Model):
     """
     Item Database Modal
     """
@@ -108,7 +108,7 @@ class Item(db.Model):
     @staticmethod
     def get_all():
         """Get all Items"""
-        Item.query.all()
+        ItemModal.query.all()
 
     def delete(self):
         """Delete Item"""
