@@ -69,7 +69,7 @@ class AuthenticationTestCase(unittest.TestCase):
         """Should register user successfully"""
         user = json.dumps({
             'name': 'Patrick',
-            'email': 'pato@gmail.com',
+            'email': 'patrick@gmail.com',
             'password': 'patrickluboobi'
         })
         response = self.client.post('/auth/register', data=user)
@@ -95,6 +95,19 @@ class AuthenticationTestCase(unittest.TestCase):
         response = self.client.post('/auth/login', data=user)
         self.assertEqual(response.status_code, 400)
         self.assertIn('Enter valid email', response.data.decode())
+
+    def test_successful_login(self):
+        """Should check for valid email"""
+
+        # First of all register
+        self.test_successfull_registration()
+        user = json.dumps({
+            'email': 'patrick@gmail.com',
+            'password': 'patrickluboobi'
+        })
+        response = self.client.post('/auth/login', data=user)
+        self.assertEqual(response.status_code, 201)
+        self.assertIn('Login Successful', response.data.decode())
 
     def tearDown(self):
         # Drop all tables
