@@ -10,6 +10,7 @@ app = create_app('DevelopmentEnv')
 
 @app.route('/')
 def index():
+    """Index route"""
     response = jsonify({'Welcome Message': 'Hello'})
     response.status_code = 201
     return response
@@ -17,6 +18,7 @@ def index():
 
 @app.route('/auth/register', methods=['POST'])
 def register():
+    """Route to handle user registration"""
     request.get_json(force=True)
     try:
         name = request.json['name']
@@ -34,8 +36,10 @@ def register():
         response.status_code = 500
         return response
 
+
 @app.route('/auth/login', methods=['POST'])
 def login():
+    """Route to handle user login"""
     request.get_json(force=True)
     try:
         email = request.json['email']
@@ -51,7 +55,6 @@ def login():
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
-
 
 
 def encode_auth_token(user_id):
