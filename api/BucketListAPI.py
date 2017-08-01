@@ -34,6 +34,25 @@ def register():
         response.status_code = 500
         return response
 
+@app.route('/auth/login', methods=['POST'])
+def login():
+    request.get_json(force=True)
+    try:
+        email = request.json['email']
+        password = request.json['password']
+        user = User(email, password)
+        response = user.login()
+        if response.status_code == 201:
+            user_id = json.loads(response.data.decode())['id']
+            encode_auth_token(user_id)
+        return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
+
 
 def encode_auth_token(user_id):
     """
