@@ -76,6 +76,26 @@ class AuthenticationTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn('Successfully registered', response.data.decode())
 
+    def test_login_without_credentials(self):
+        """Should check for valid email"""
+        user = json.dumps({
+            'email': '',
+            'password': ''
+        })
+        response = self.client.post('/auth/login', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Missing login credentials', response.data.decode())
+
+    def test_login_with_invalid_email(self):
+        """Should check for valid email"""
+        user = json.dumps({
+            'email': 'patrick',
+            'password': 'patrickluboobi'
+        })
+        response = self.client.post('/auth/login', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Enter valid email', response.data.decode())
+
     def tearDown(self):
         # Drop all tables
         with app.app_context():
