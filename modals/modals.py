@@ -1,23 +1,30 @@
 from datetime import datetime
 
-from api.__init__ import db
+from api import db
+from werkzeug.security import generate_password_hash, \
+    check_password_hash
 
 
 class User(db.Model):
     """
     User Database Modal
     """
-    __table_name = 'users'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
-    bucket = db.relationship('Bucket', backref='user')
 
     def __init__(self, email, password, name=None):
         self.email = email
-        self.password = password
         self.name = name
+        self.set_password(password)
+
+    def set_password(self, password):
+        self.pw_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.pw_hash, password)
 
     def save(self):
         """
@@ -44,13 +51,12 @@ class Bucket(db.Model):
     """
     Bucket database Modal
     """
-    __table_name = 'buckets'
+    __tablename__ = 'buckets'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     desc = db.Column(db.String(100))
     date_added = db.Column(db.DateTime, default=datetime.utcnow())
-    item = db.relationship('Item', backref='bucket')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __init__(self, name, desc):
         self.name = name
@@ -81,12 +87,12 @@ class Item(db.Model):
     """
     Item Database Modal
     """
-    __table_name = 'items'
+    __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
     status = db.Column(db.String(5))
     date_added = db.Column(db.DateTime, default=datetime.utcnow())
-    bucket_id = db.Column(db.Integer, db.ForeignKey('bucket.id'))
+    bucket_id = db.Column(db.Integer, db.ForeignKey('buckets.id'))
 
     def __init__(self, name, status):
         self.name = name
