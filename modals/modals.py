@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from api import db
 from werkzeug.security import generate_password_hash, \
     check_password_hash

@@ -76,7 +76,6 @@ class AuthenticationTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn('Successfully registered', response.data.decode())
 
-
     def tearDown(self):
         # Drop all tables
         with app.app_context():

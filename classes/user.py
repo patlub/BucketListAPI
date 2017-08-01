@@ -1,6 +1,5 @@
-from flask import request, jsonify
+from flask import jsonify
 from validate_email import validate_email
-
 from modals.modals import UserModal
 
 
@@ -36,7 +35,8 @@ class User(object):
 
         user.save()
         response = jsonify({
-            'Status': user.email + ' Successfully registered'
+            'Status': user.email + ' Successfully registered',
+            'id': user.id
         })
         response.status_code = 201
         return response
