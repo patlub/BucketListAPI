@@ -51,3 +51,16 @@ class User(object):
             response = jsonify({'Error': 'Enter valid email'})
             response.status_code = 400
             return response
+
+        user = UserModal(email=self.email, password=self.password)
+        userdata = user.query.filter_by(email=self.email).first()
+        if userdata and user.check_password(userdata.password,
+                                            self.password):
+            response = jsonify({
+                'Status': user.email + ' Login Successful',
+                'id': user.id
+            })
+            response.status_code = 201
+            return response
+
+
