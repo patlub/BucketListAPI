@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from modals.modals import User, Bucket, Item
+from modals.modals import User
 from api import create_app, db
 from validate_email import validate_email
 
@@ -36,6 +36,21 @@ def register():
             response.status_code = 400
             return response
 
+        user = User(email=email, password=password, name=name)
+        res = user.get_all()
+
+        if email in [r.email for r in res]:
+            response = jsonify({'Error': 'Email Already exists'})
+            response.status_code = 400
+            return response
+
+        user.save()
+        response = jsonify({
+            'Status': user.email + ' Successfully registered'
+        })
+        response.status_code = 201
+        return response
+
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -44,4 +59,6 @@ def register():
 
 
 if __name__ == '__main__':
+    app.debug = True
     app.run()
+    app.run(debug=True)
