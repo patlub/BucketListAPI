@@ -90,6 +90,48 @@ class BucketTestCase(unittest.TestCase):
         self.assertIn('Travel',
                       response.data.decode())
 
+    def test_get_single_bucket(self):
+        """Should return all buckets lists"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        response = self.client.get('/buckets/1',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Travel',
+                      response.data.decode())
+
+    def test_get_single_bucket_with_no_bucket(self):
+        """Should return all buckets lists"""
+
+        response = self.client.get('/buckets/1',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('No bucketlist',
+                      response.data.decode())
+
+    def test_get_single_bucket_not_existing(self):
+        """Should return all buckets lists"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        response = self.client.get('/buckets/2',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('bucketlist with id 2 not found',
+                      response.data.decode())
+
+    def test_get_single(self):
+        """Should return all buckets lists"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        response = self.client.get('/buckets/1',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Travel',
+                      response.data.decode())
+
     def tearDown(self):
         # Drop all tables
         with app.app_context():
