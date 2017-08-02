@@ -124,6 +124,27 @@ def get_buckets():
         response.status_code = 500
         return response
 
+@app.route('/buckets/<int:bucket_id>', methods=['GET'])
+def get_single_bucket(bucket_id):
+    """Route to handle creating a bucket"""
+    try:
+        token = request.headers.get("Authorization")
+        data = decode_auth_token(token)
+        if isinstance(data, int):
+            user_id = data
+            bucket = Bucket()
+            response = bucket.get_single_bucket(user_id, bucket_id)
+            return response
+        else:
+            response = jsonify({'Error': 'Invalid Token'})
+            response.status_code = 400
+            return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
 
 def encode_auth_token(user_id):
     """
