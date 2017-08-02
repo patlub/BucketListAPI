@@ -77,3 +77,27 @@ class Authenticate(object):
         response.status_code = 400
         return response
 
+    def reset_password(self, email):
+        """
+        resets password of an existing user
+        and returns an API response with status
+        code set to 201 on success
+        """
+        if not email:
+            response = jsonify({'Error': 'No email sent'})
+            response.status_code = 400
+            return response
+
+        if not validate_email(email):
+            response = jsonify({'Error': 'Enter valid email'})
+            response.status_code = 400
+            return response
+
+        user = UserModal(email=email, password='')
+        user_data = user.query.filter_by(email=email).first()
+        if user_data:
+            return 0
+        response = jsonify({'Error': 'Email does not exist'})
+        response.status_code = 400
+        return response
+
