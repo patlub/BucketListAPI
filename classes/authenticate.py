@@ -3,40 +3,35 @@ from validate_email import validate_email
 from modals.modals import UserModal
 
 
-class User(object):
+class Authenticate(object):
     """
     Handles all user operations
     """
 
-    def __init__(self, email, password, name=None):
-        self.email = email
-        self.name = name
-        self.password = password
-
-    def register(self):
+    def register(self,email, password, name):
         """
         Registers a new user to the application
         and returns an API response with status
         code set to 201 on success
         """
-        if not self.name or not self.email or not self.password:
+        if not name or not email or not password:
             response = jsonify({'Error': 'Missing Values'})
             response.status_code = 400
             return response
 
-        if not validate_email(self.email):
+        if not validate_email(email):
             response = jsonify({'Error': 'Invalid Email'})
             response.status_code = 400
             return response
 
-        if len(self.password) < 6:
+        if len(password) < 6:
             response = jsonify({'Error': 'Password is short'})
             response.status_code = 400
             return response
 
-        user = UserModal(email=self.email, password=self.password, name=self.name)
+        user = UserModal(email=email, password=password, name=name)
 
-        if user.query.filter_by(email=self.email).first():
+        if user.query.filter_by(email=email).first():
             response = jsonify({'Error': 'Email Already exists'})
             response.status_code = 400
             return response
@@ -49,31 +44,31 @@ class User(object):
         response.status_code = 201
         return response
 
-    def login(self):
+    def login(self, email, password):
         """
         logs in an existing user to the application
         and returns an API response with status
         code set to 201 on success
         """
-        if not self.email or not self.password:
+        if not email or not password:
             response = jsonify({'Error': 'Missing login credentials'})
             response.status_code = 400
             return response
 
-        if not validate_email(self.email):
+        if not validate_email(email):
             response = jsonify({'Error': 'Enter valid email'})
             response.status_code = 400
             return response
 
-        user = UserModal(email=self.email, password=self.password)
-        user_data = user.query.filter_by(email=self.email).first()
+        user = UserModal(email=email, password=password)
+        user_data = user.query.filter_by(email=email).first()
 
         # If Login successful
         if user_data and user.check_password(user_data.password,
-                                             self.password):
+                                             password):
             response = jsonify({
                 'Status': user.email + ' Login Successful',
-                'id': user.id
+                'id': user_data.id
             })
             response.status_code = 201
             return response
@@ -81,3 +76,4 @@ class User(object):
         response = jsonify({'Error': 'Incorrect email or password'})
         response.status_code = 400
         return response
+
