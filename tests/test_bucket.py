@@ -31,7 +31,7 @@ class BucketTestCase(unittest.TestCase):
             'desc': 'travel'
         })
         response = self.client.post('/auth/bucket', data=bucket,
-                                    headers={"Authorization" : self.token})
+                                    headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 400)
         self.assertIn('Missing', response.data.decode())
 
@@ -42,9 +42,23 @@ class BucketTestCase(unittest.TestCase):
             'desc': 'Visit places'
         })
         response = self.client.post('/auth/bucket', data=bucket,
-                                    headers={"Authorization" : self.token})
+                                    headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
         self.assertIn('Successfully', response.data.decode())
+
+    def test_add_bucket_with_existing_bucket_name(self):
+        """Should return 400 for missing bucket name"""
+
+        # First Add bucket
+        self.test_add_bucket_successfully()
+        bucket = json.dumps({
+            'bucket': 'Travel',
+            'desc': 'travel'
+        })
+        response = self.client.post('/auth/bucket', data=bucket,
+                                    headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Bucket name Already exists', response.data.decode())
 
     def tearDown(self):
         # Drop all tables
