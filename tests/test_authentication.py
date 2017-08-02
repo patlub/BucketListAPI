@@ -122,6 +122,30 @@ class AuthenticationTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn('Login Successful', response.data.decode())
 
+    def test_reset_password_with_no_email(self):
+        """Should throe error for non existing email"""
+
+        # First of all register
+        self.test_successfull_registration()
+        user = json.dumps({
+            'email': ''
+        })
+        response = self.client.post('/auth/reset-password', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('No email sent', response.data.decode())
+
+    def test_reset_password_for_non_exisiting_email(self):
+        """Should throe error for non existing email"""
+
+        # First of all register
+        self.test_successfull_registration()
+        user = json.dumps({
+            'email': 'andela@gmail.com'
+        })
+        response = self.client.post('/auth/reset-password', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Email does not exist', response.data.decode())
+
     def tearDown(self):
         # Drop all tables
         with app.app_context():
