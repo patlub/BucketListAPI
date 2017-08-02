@@ -5,6 +5,7 @@ from flask import jsonify, request, json
 from api import create_app
 from classes.authenticate import Authenticate
 from classes.bucket import Bucket
+from modals.modals import BucketModal
 
 app = create_app('DevelopmentEnv')
 
@@ -78,7 +79,7 @@ def reset_password():
         return response
 
 
-@app.route('/auth/bucket', methods=['POST'])
+@app.route('/bucket', methods=['POST'])
 def add_bucket():
     """Route to handle creating a bucket"""
     request.get_json(force=True)
@@ -90,6 +91,32 @@ def add_bucket():
             desc = request.json['desc']
             bucket = Bucket()
             response = bucket.create_bucket(bucket_name, desc, user_id)
+            return response
+        response = jsonify({'Error': 'Invalid Token'})
+        response.status_code = 400
+        return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
+
+@app.route('/buckets', methods=['GET'])
+def get_buckets():
+    """Route to handle creating a bucket"""
+    try:
+        token = request.headers.get("Authorization")
+        data = decode_auth_token(token)
+        if isinstance(data, int):
+            user_id = data
+            search = request.args.get("q", "")
+            bucket = Bucket()
+            response = bucket.get_buckets(user_id, search)
+            return response
+        else:
+            response = jsonify({'Error': 'Invalid Token'})
+            response.status_code = 400
             return response
 
     except KeyError:
