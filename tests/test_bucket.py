@@ -68,6 +68,28 @@ class BucketTestCase(unittest.TestCase):
         self.assertIn('No bucketlist has been created',
                       response.data.decode())
 
+    def test_get_bucket(self):
+        """Should return all buckets lists"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        response = self.client.get('/buckets',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Travel',
+                      response.data.decode())
+
+    def test_get_bucket_search(self):
+        """Should return all buckets lists"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        response = self.client.get('/buckets?q=Travel',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Travel',
+                      response.data.decode())
+
     def tearDown(self):
         # Drop all tables
         with app.app_context():
