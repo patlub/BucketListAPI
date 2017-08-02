@@ -4,6 +4,7 @@ import jwt
 from flask import jsonify, request, json
 from api import create_app
 from classes.authenticate import Authenticate
+from classes.bucket import Bucket
 
 app = create_app('DevelopmentEnv')
 
@@ -27,8 +28,10 @@ def register():
         user = Authenticate()
         response = user.register(email, password, name)
         if response.status_code == 201:
-            user_id = json.loads(response.data.decode())['id']
-            encode_auth_token(user_id)
+            data = json.loads(response.data.decode())
+            data['id'] = encode_auth_token(data['id']).decode()
+            response = jsonify(data)
+            response.status_code = 201
         return response
 
     except KeyError:
@@ -47,8 +50,10 @@ def login():
         user = Authenticate()
         response = user.login(email, password)
         if response.status_code == 201:
-            user_id = json.loads(response.data.decode())['id']
-            encode_auth_token(user_id)
+            data = json.loads(response.data.decode())
+            data['id'] = encode_auth_token(data['id']).decode()
+            response = jsonify(data)
+            response.status_code = 201
         return response
 
     except KeyError:
@@ -66,6 +71,26 @@ def reset_password():
         user = Authenticate()
         response = user.reset_password(email)
         return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
+
+@app.route('/auth/bucket', methods=['POST'])
+def add_bucket():
+    """Route to handle creating a bucket"""
+    request.get_json(force=True)
+    try:
+        token = request.headers.get("Authorization")
+        user_id = decode_auth_token(token)
+        if isinstance(user_id, int):
+            bucket_name = request.json['bucket']
+            desc = request.json['desc']
+            bucket = Bucket()
+            response = bucket.create_bucket(bucket_name, desc, user_id)
+            return response
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -104,9 +129,18 @@ def decode_auth_token(auth_token):
         payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
         return payload['sub']
     except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
+        response = jsonify({
+            'Expired': 'Signature expired. Please log in again.'
+        })
+        response.status_code = 401
+        return response
+
     except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
+        response = jsonify({
+            'Invalid': 'Invalid token. Please log in again.'
+        })
+        response.status_code = 401
+        return response
 
 
 if __name__ == '__main__':
