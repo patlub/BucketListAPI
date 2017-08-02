@@ -54,9 +54,10 @@ class BucketModal(db.Model):
     date_added = db.Column(db.DateTime, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, name, desc):
+    def __init__(self, name, desc, user_id):
         self.name = name
         self.desc = desc
+        self.user_id = user_id
 
     def save(self):
         """
@@ -113,3 +114,4 @@ class ItemModal(db.Model):
 
     def __repr__(self) -> str:
         return "<Item: {}>".format(self.name)
+
