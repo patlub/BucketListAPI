@@ -1,3 +1,4 @@
+import jwt
 from flask import jsonify
 from validate_email import validate_email
 from modals.modals import UserModal
@@ -8,7 +9,7 @@ class Authenticate(object):
     Handles all user operations
     """
 
-    def register(self,email, password, name):
+    def register(self, email, password, name):
         """
         Registers a new user to the application
         and returns an API response with status
@@ -100,4 +101,3 @@ class Authenticate(object):
         response = jsonify({'Error': 'Email does not exist'})
         response.status_code = 400
         return response
-
