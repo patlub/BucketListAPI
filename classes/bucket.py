@@ -29,3 +29,58 @@ class Bucket(object):
         })
         response.status_code = 201
         return response
+
+    def get_buckets(self, user_id, search):
+        response = BucketModal.query.all()
+        if not response:
+            response = jsonify({'error': 'No bucketlist has been created'})
+            response.status_code = 200
+            return response
+        else:
+            if search:
+                res = [bucket for bucket in response if bucket.name
+                       in search and bucket.user_id == user_id]
+                if not res:
+                    response = jsonify({
+                        'error': 'The bucket you searched does not exist'
+                    })
+                    return response
+                else:
+                    bucketlist_data = []
+                    for data in res:
+                        final = {
+                            'id': data.id,
+                            'name': data.name,
+                            'desc': data.desc,
+                            'date_added': data.date_added,
+                            'user_id': data.user_id
+                        }
+                        bucketlist_data.clear()
+                        bucketlist_data.append(final)
+                    response = jsonify(bucketlist_data)
+                    response.status_code = 200
+                    return response
+
+            else:
+                res = [bucket for bucket in
+                       response if bucket.user_id == user_id]
+                bucketlist_data = []
+                if not res:
+                    response = jsonify({
+                        'error': 'No bucketlists have been created'
+                    })
+                    response.status_code = 200
+                    return response
+                else:
+                    for data in res:
+                        final = {
+                            'id': data.id,
+                            'name': data.name,
+                            'desc': data.desc,
+                            'date_added': data.date_added,
+                            'user_id': data.user_id
+                        }
+                        bucketlist_data.append(final)
+                    response = jsonify(bucketlist_data)
+                    response.status_code = 200
+                    return response
