@@ -3,7 +3,7 @@ import datetime
 import jwt
 from flask import jsonify, request, json
 from api import create_app
-from classes.user import User
+from classes.authenticate import Authenticate
 
 app = create_app('DevelopmentEnv')
 
@@ -24,8 +24,8 @@ def register():
         name = request.json['name']
         email = request.json['email']
         password = request.json['password']
-        user = User(email, password, name)
-        response = user.register()
+        user = Authenticate()
+        response = user.register(email, password, name)
         if response.status_code == 201:
             user_id = json.loads(response.data.decode())['id']
             encode_auth_token(user_id)
@@ -44,8 +44,8 @@ def login():
     try:
         email = request.json['email']
         password = request.json['password']
-        user = User(email, password)
-        response = user.login()
+        user = Authenticate()
+        response = user.login(email, password)
         if response.status_code == 201:
             user_id = json.loads(response.data.decode())['id']
             encode_auth_token(user_id)
