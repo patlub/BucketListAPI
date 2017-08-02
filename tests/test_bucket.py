@@ -30,7 +30,7 @@ class BucketTestCase(unittest.TestCase):
             'bucket': '',
             'desc': 'travel'
         })
-        response = self.client.post('/auth/bucket', data=bucket,
+        response = self.client.post('/bucket', data=bucket,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 400)
         self.assertIn('Missing', response.data.decode())
@@ -41,7 +41,7 @@ class BucketTestCase(unittest.TestCase):
             'bucket': 'Travel',
             'desc': 'Visit places'
         })
-        response = self.client.post('/auth/bucket', data=bucket,
+        response = self.client.post('/bucket', data=bucket,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
         self.assertIn('Successfully', response.data.decode())
@@ -55,10 +55,18 @@ class BucketTestCase(unittest.TestCase):
             'bucket': 'Travel',
             'desc': 'travel'
         })
-        response = self.client.post('/auth/bucket', data=bucket,
+        response = self.client.post('/bucket', data=bucket,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 400)
         self.assertIn('Bucket name Already exists', response.data.decode())
+
+    def test_get_bucket_when_DB_is_empty(self):
+        """Should return all buckets lists"""
+        response = self.client.get('/buckets',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('No bucketlist has been created',
+                      response.data.decode())
 
     def tearDown(self):
         # Drop all tables
