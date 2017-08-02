@@ -57,6 +57,22 @@ def login():
         return response
 
 
+@app.route('/auth/reset-password', methods=['POST'])
+def reset_password():
+    """Route to handle reset password"""
+    request.get_json(force=True)
+    try:
+        email = request.json['email']
+        user = Authenticate()
+        response = user.reset_password(email)
+        return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
+
 def encode_auth_token(user_id):
     """
     Generates the Auth Token
