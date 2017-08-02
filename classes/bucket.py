@@ -7,6 +7,7 @@ class Bucket(object):
     """
     Handles all bucket operations
     """
+
     def create_bucket(self, name, desc, user_id):
         """
         Creates a new bucket 
@@ -84,3 +85,34 @@ class Bucket(object):
                     response = jsonify(bucketlist_data)
                     response.status_code = 200
                     return response
+
+    def get_single_bucket(self, user_id, bucket_id):
+        response = BucketModal.query.all()
+        if not response:
+            response = jsonify({'error': 'No bucketlist has been created'})
+            response.status_code = 200
+            return response
+
+        res = [bucket for bucket in
+               response if bucket.id == bucket_id
+               and bucket.user_id == user_id]
+        if not res:
+            response = jsonify({
+                'error': 'bucketlist with id '+ str(bucket_id) + ' not found'
+            })
+            response.status_code = 200
+            return response
+
+        bucketlist_data = []
+        for data in res:
+            final = {
+                'id': data.id,
+                'name': data.name,
+                'desc': data.desc,
+                'date_added': data.date_added,
+                'user_id': data.user_id
+            }
+            bucketlist_data.append(final)
+        response = jsonify(bucketlist_data)
+        response.status_code = 200
+        return response
