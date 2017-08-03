@@ -98,7 +98,8 @@ class Bucket(object):
                and bucket.user_id == user_id]
         if not res:
             response = jsonify({
-                'error': 'bucketlist with id '+ str(bucket_id) + ' not found'
+                'error': 'bucketlist with id ' +
+                         str(bucket_id) + ' not found'
             })
             response.status_code = 200
             return response
@@ -116,3 +117,31 @@ class Bucket(object):
         response = jsonify(bucketlist_data)
         response.status_code = 200
         return response
+
+    def update_bucket(self, user_id, bucket_id, bucket_name, desc):
+        if not bucket_name:
+            response = jsonify({'Error': 'Missing Bucket name'})
+            response.status_code = 400
+            return response
+
+        bucket = BucketModal.query.filter_by(id=bucket_id,
+                                             user_id=user_id).first()
+        if not bucket:
+            bucket = jsonify({'error': 'the bucket does not exist'})
+            bucket.status_code = 400
+            return bucket
+
+        bucket.name = bucket_name
+        bucket.desc = desc
+        bucket.update()
+
+        bucket = BucketModal.query.filter_by(id=bucket_id,
+                                             user_id=user_id).first()
+        response = jsonify({
+            'success': 'bucket updated',
+            'bucket': bucket.name
+        })
+        response.status_code = 200
+        return response
+
+        # bucket_data = [bucket for bucket in response if  bucket.user_id == user_id]
