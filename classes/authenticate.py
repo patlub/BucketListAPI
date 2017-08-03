@@ -1,4 +1,3 @@
-import jwt
 from flask import jsonify
 from validate_email import validate_email
 from modals.modals import UserModal
