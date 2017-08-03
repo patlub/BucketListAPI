@@ -146,6 +146,32 @@ def get_single_bucket(bucket_id):
         return response
 
 
+@app.route('/buckets/<int:bucket_id>', methods=['PUT'])
+def update_bucket(bucket_id):
+    """Route to handle creating a bucket"""
+    request.get_json(force=True)
+    try:
+        token = request.headers.get("Authorization")
+        data = decode_auth_token(token)
+        if isinstance(data, int):
+            bucket_name = request.json['bucket']
+            desc = request.json['desc']
+            user_id = data
+            bucket = Bucket()
+            response = bucket.update_bucket(user_id, bucket_id,
+                                            bucket_name, desc)
+            return response
+        else:
+            response = jsonify({'Error': 'Invalid Token'})
+            response.status_code = 400
+            return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
+
 def encode_auth_token(user_id):
     """
     Generates the Auth Token
