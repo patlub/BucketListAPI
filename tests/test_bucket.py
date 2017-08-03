@@ -106,8 +106,8 @@ class BucketTestCase(unittest.TestCase):
 
         response = self.client.get('/buckets/1',
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('No bucketlist',
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('not found',
                       response.data.decode())
 
     def test_get_single_bucket_not_existing(self):
@@ -117,7 +117,7 @@ class BucketTestCase(unittest.TestCase):
         self.test_add_bucket_successfully()
         response = self.client.get('/buckets/2',
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertIn('bucketlist with id 2 not found',
                       response.data.decode())
 
