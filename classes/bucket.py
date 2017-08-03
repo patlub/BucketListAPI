@@ -1,5 +1,4 @@
 from flask import jsonify
-from validate_email import validate_email
 from modals.modals import BucketModal
 
 
@@ -134,4 +133,17 @@ class Bucket(object):
         response.status_code = 200
         return response
 
-        # bucket_data = [bucket for bucket in response if  bucket.user_id == user_id]
+    def delete_bucket(self, user_id, bucket_id):
+        bucket = BucketModal.query.filter_by(id=bucket_id,
+                                             user_id=user_id).first()
+        if not bucket:
+            bucket = jsonify({'error': 'Bucket not found'})
+            bucket.status_code = 400
+            return bucket
+
+        bucket.delete()
+        response = jsonify({
+            'success': 'bucket deleted',
+        })
+        response.status_code = 200
+        return response
