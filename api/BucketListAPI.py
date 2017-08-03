@@ -5,7 +5,6 @@ from flask import jsonify, request, json
 from api import create_app
 from classes.authenticate import Authenticate
 from classes.bucket import Bucket
-from modals.modals import BucketModal
 
 app = create_app('DevelopmentEnv')
 
@@ -20,7 +19,7 @@ def index():
 
 @app.route('/auth/register', methods=['POST'])
 def register():
-    """Route to handle user registration"""
+    """Method to handle user registration"""
     request.get_json(force=True)
     try:
         name = request.json['name']
@@ -43,7 +42,7 @@ def register():
 
 @app.route('/auth/login', methods=['POST'])
 def login():
-    """Route to handle user login"""
+    """Method to handle user login"""
     request.get_json(force=True)
     try:
         email = request.json['email']
@@ -65,7 +64,7 @@ def login():
 
 @app.route('/auth/reset-password', methods=['POST'])
 def reset_password():
-    """Route to handle reset password"""
+    """Method to handle reset password"""
     request.get_json(force=True)
     try:
         email = request.json['email']
@@ -81,7 +80,7 @@ def reset_password():
 
 @app.route('/bucket', methods=['POST'])
 def add_bucket():
-    """Route to handle creating a bucket"""
+    """Method to handle creating a bucket"""
     request.get_json(force=True)
     try:
         token = request.headers.get("Authorization")
@@ -104,7 +103,7 @@ def add_bucket():
 
 @app.route('/buckets', methods=['GET'])
 def get_buckets():
-    """Route to handle creating a bucket"""
+    """Method to handle getting all buckets"""
     try:
         token = request.headers.get("Authorization")
         data = decode_auth_token(token)
@@ -124,9 +123,10 @@ def get_buckets():
         response.status_code = 500
         return response
 
+
 @app.route('/buckets/<int:bucket_id>', methods=['GET'])
 def get_single_bucket(bucket_id):
-    """Route to handle creating a bucket"""
+    """Method to handle getting a single bucket"""
     try:
         token = request.headers.get("Authorization")
         data = decode_auth_token(token)
@@ -148,7 +148,7 @@ def get_single_bucket(bucket_id):
 
 @app.route('/buckets/<int:bucket_id>', methods=['PUT'])
 def update_bucket(bucket_id):
-    """Route to handle creating a bucket"""
+    """Method to handle updating a bucket"""
     request.get_json(force=True)
     try:
         token = request.headers.get("Authorization")
@@ -160,6 +160,28 @@ def update_bucket(bucket_id):
             bucket = Bucket()
             response = bucket.update_bucket(user_id, bucket_id,
                                             bucket_name, desc)
+            return response
+        else:
+            response = jsonify({'Error': 'Invalid Token'})
+            response.status_code = 400
+            return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
+
+@app.route('/buckets/<int:bucket_id>', methods=['DELETE'])
+def delete_bucket(bucket_id):
+    """Method to handle creating a bucket"""
+    try:
+        token = request.headers.get("Authorization")
+        data = decode_auth_token(token)
+        if isinstance(data, int):
+            user_id = data
+            bucket = Bucket()
+            response = bucket.delete_bucket(user_id, bucket_id)
             return response
         else:
             response = jsonify({'Error': 'Invalid Token'})
