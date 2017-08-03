@@ -132,6 +132,45 @@ class BucketTestCase(unittest.TestCase):
         self.assertIn('Travel',
                       response.data.decode())
 
+    def test_update_bucket_which_doesnt_exist(self):
+        """Should return 201 for bucket added"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        bucket = json.dumps({
+            'bucket': 'Travel',
+            'desc': 'Visit places'
+        })
+        response = self.client.put('/buckets/2', data=bucket,
+                                    headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('does not exist', response.data.decode())
+
+    def test_update_bucket_without_bucket_name(self):
+        """Should return 400 for missing bucket name"""
+        bucket = json.dumps({
+            'bucket': '',
+            'desc': 'travel'
+        })
+        response = self.client.put('/buckets/1', data=bucket,
+                                    headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Missing', response.data.decode())
+
+    def test_update_bucket_successfully(self):
+        """Should return 201 for bucket added"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        bucket = json.dumps({
+            'bucket': 'Food',
+            'desc': 'Test Foods'
+        })
+        response = self.client.put('/buckets/1', data=bucket,
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Food', response.data.decode())
+
     def tearDown(self):
         # Drop all tables
         with app.app_context():
