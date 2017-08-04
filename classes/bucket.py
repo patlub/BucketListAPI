@@ -128,7 +128,8 @@ class Bucket(object):
     @staticmethod
     def update_bucket(user_id, bucket_id, bucket_name, desc):
         """
-        Updates a bucket        
+        Updates a bucket
+                
         :param user_id: 
         :param bucket_id: 
         :param bucket_name: 
