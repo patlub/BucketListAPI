@@ -7,9 +7,14 @@ class Item(object):
     Handles all item operations
     """
 
-    def add_item(self, user_id, bucket_id, item_name):
+    @staticmethod
+    def add_item(user_id, bucket_id, item_name):
         """
-        Creates a new bucket 
+        Creates a new bucket
+                
+        :param user_id: 
+        :param bucket_id: 
+        :param item_name: 
         """
         if not item_name:
             response = jsonify({'Error': 'Missing Item name'})
@@ -34,6 +39,46 @@ class Item(object):
         response = jsonify({
             'Status': 'Successfully Added item',
             'id': item.id
+        })
+        response.status_code = 201
+        return response
+
+    @staticmethod
+    def edit_item(user_id, bucket_id, item_id, new_item_name):
+        """
+        Creates a new bucket
+
+        :param user_id: 
+        :param bucket_id: 
+        :param item_id: 
+        :param new_item_name: 
+        """
+        if not new_item_name:
+            response = jsonify({'Error': 'Missing Item name'})
+            response.status_code = 400
+            return response
+
+        bucket = BucketModal.query.filter_by(id=bucket_id,
+                                             user_id=user_id).first()
+        if not bucket:
+            response = jsonify({'Error': 'Bucket with id '
+                                         + str(user_id) + ' not found'})
+            response.status_code = 400
+            return response
+
+        item = ItemModal.query.filter_by(id=item_id, bucket_id=bucket_id).first()
+        if not item:
+            response = jsonify({
+                'Error': 'item with id ' + str(item_id) + ' does not exist'
+            })
+            response.status_code = 400
+            return response
+
+        item.name = new_item_name
+        item.save()
+        response = jsonify({
+            'Status': 'Successfully updated item',
+            'item_name': new_item_name
         })
         response.status_code = 201
         return response
