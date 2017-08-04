@@ -19,8 +19,14 @@ class UserModal(db.Model):
         self.name = name
         self.password = generate_password_hash(password)
 
-    def check_password(self, hash, password):
-        return check_password_hash(hash, password)
+    @staticmethod
+    def check_password(pw_hash, password):
+        """ 
+        Validates password        
+        :param pw_hash: 
+        :param password: 
+        """
+        return check_password_hash(pw_hash, password)
 
     def save(self):
         """
@@ -66,7 +72,9 @@ class BucketModal(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self):
+    @staticmethod
+    def update():
+        """Updates bucket"""
         db.session.commit()
 
     @staticmethod
@@ -117,4 +125,3 @@ class ItemModal(db.Model):
 
     def __repr__(self) -> str:
         return "<Item: {}>".format(self.name)
-
