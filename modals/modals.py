@@ -90,13 +90,13 @@ class ItemModal(db.Model):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
-    status = db.Column(db.String(5))
+    status = db.Column(db.String(5), default=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow())
     bucket_id = db.Column(db.Integer, db.ForeignKey('buckets.id'))
 
-    def __init__(self, name, status):
+    def __init__(self, name, bucket_id):
         self.name = name
-        self.status = status
+        self.bucket_id = bucket_id
 
     def save(self):
         """
