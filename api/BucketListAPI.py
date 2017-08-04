@@ -5,6 +5,7 @@ from flask import jsonify, request, json
 from api import create_app
 from classes.authenticate import Authenticate
 from classes.bucket import Bucket
+from classes.item import Item
 
 app = create_app('DevelopmentEnv')
 
@@ -192,6 +193,30 @@ def delete_bucket(bucket_id):
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
+
+@app.route('/buckets/<int:bucket_id>/items', methods=['POST'])
+def add_item(bucket_id):
+    """Method to handle creating a bucket"""
+    request.get_json(force=True)
+    try:
+        token = request.headers.get("Authorization")
+        data = decode_auth_token(token)
+        if isinstance(data, int):
+            item_name = request.json['item']
+            user_id = data
+            item = Item()
+            response = item.add_item(user_id, bucket_id, item_name)
+            return response
+        else:
+            response = jsonify({'Error': 'Invalid Token'})
+            response.status_code = 400
+            return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
 
 
 def encode_auth_token(user_id):
