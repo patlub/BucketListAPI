@@ -8,11 +8,16 @@ class Authenticate(object):
     Handles all user operations
     """
 
-    def register(self, email, password, name):
+    @staticmethod
+    def register(email, password, name):
         """
         Registers a new user to the application
         and returns an API response with status
         code set to 201 on success
+        
+        :param email: 
+        :param password: 
+        :param name:  
         """
         if not name or not email or not password:
             response = jsonify({'Error': 'Missing Values'})
@@ -44,11 +49,15 @@ class Authenticate(object):
         response.status_code = 201
         return response
 
-    def login(self, email, password):
+    @staticmethod
+    def login(email, password):
         """
         logs in an existing user to the application
         and returns an API response with status
         code set to 201 on success
+        
+        :param email: 
+        :param password:  
         """
         if not email or not password:
             response = jsonify({'Error': 'Missing login credentials'})
@@ -77,11 +86,14 @@ class Authenticate(object):
         response.status_code = 400
         return response
 
-    def reset_password(self, email):
+    @staticmethod
+    def reset_password(email):
         """
         resets password of an existing user
         and returns an API response with status
         code set to 201 on success
+        
+        :param email:  
         """
         if not email:
             response = jsonify({'Error': 'No email sent'})
