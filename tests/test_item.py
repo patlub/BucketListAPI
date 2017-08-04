@@ -49,14 +49,13 @@ class ItemTestCase(unittest.TestCase):
             'desc': 'Visit places'
         })
         self.client.post('/bucket', data=bucket,
-                                    headers={"Authorization": self.token})
+                         headers={"Authorization": self.token})
 
         item = json.dumps({'item': 'Go to Nairobi'})
         response = self.client.post('/buckets/1/items', data=item,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
         self.assertIn('Successfully Added item', response.data.decode())
-
 
     def test_add_duplicate_item(self):
         """Should return 400 for duplicate item"""
@@ -68,6 +67,52 @@ class ItemTestCase(unittest.TestCase):
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 400)
         self.assertIn('item name Already exists', response.data.decode())
+
+    def test_edit_item_with_no_name(self):
+        """Should return 400 for missing item name"""
+
+        item = json.dumps({'item': ''})
+        response = self.client.put('/buckets/1/items/1', data=item,
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Missing Item name', response.data.decode())
+
+    def test_edit_item_with_missing_bucket(self):
+        """Should return 400 for missing bucket"""
+
+        item = json.dumps({'item': 'Go to New York'})
+        response = self.client.put('/buckets/1/items/1', data=item,
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Bucket with id 1 not found', response.data.decode())
+
+    def test_edit_item_with_missing_item(self):
+        """Should return 400 for missing item"""
+
+        # First add the bucket
+        bucket = json.dumps({
+            'bucket': 'Travel',
+            'desc': 'Visit places'
+        })
+        self.client.post('/bucket', data=bucket,
+                         headers={"Authorization": self.token})
+        item = json.dumps({'item': 'Go to New York'})
+        response = self.client.put('/buckets/1/items/1', data=item,
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('item with id 1 does not exist',
+                      response.data.decode())
+
+    def test_edit_item_succesfully(self):
+        """Should return 400 for missing bucket"""
+
+        self.test_add_item_successfully()
+        item = json.dumps({'item': 'Go to Silicon Valley'})
+        response = self.client.put('/buckets/1/items/1', data=item,
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 201)
+        self.assertIn('Successfully updated item', response.data.decode())
+        self.assertIn('Go to Silicon Valley', response.data.decode())
 
     def tearDown(self):
         # Drop all tables
