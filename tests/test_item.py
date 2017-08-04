@@ -1,9 +1,80 @@
 import unittest
+from flask import json
+from api import db
+from api.BucketListAPI import app
+from instance.config import application_config
 
 
-class MyTestCase(unittest.TestCase):
-    def test_something(self):
-        self.assertEqual(True, False)
+class ItemTestCase(unittest.TestCase):
+    def setUp(self):
+        app.config.from_object(application_config['TestingEnv'])
+        self.client = app.test_client()
+
+        # Binds the app to current context
+        with app.app_context():
+            # Create all tables
+            db.create_all()
+
+        user = json.dumps({
+            'email': 'pat@gmail.com',
+            'password': 'bucketlist',
+            'name': 'Patrick'
+        })
+        response = self.client.post('/auth/register', data=user)
+        json_repr = json.loads(response.data.decode())
+        self.token = json_repr['id']
+
+    def test_add_item_with_no_name(self):
+        """Should return 400 for missing item name"""
+        item = json.dumps({'item': ''})
+        response = self.client.post('/buckets/1/items', data=item,
+                                    headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Missing Item name', response.data.decode())
+
+    def test_add_item_when_bucket_doesnt_exist(self):
+        """Should return 400 for missing bucket"""
+        item = json.dumps({'item': 'Go to Nairobi'})
+        response = self.client.post('/buckets/1/items', data=item,
+                                    headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Bucket with id 1 not found', response.data.decode())
+
+    def test_add_item_successfully(self):
+        """Should return 201 for item added"""
+
+        # First add the bucket
+        bucket = json.dumps({
+            'bucket': 'Travel',
+            'desc': 'Visit places'
+        })
+        self.client.post('/bucket', data=bucket,
+                                    headers={"Authorization": self.token})
+
+        item = json.dumps({'item': 'Go to Nairobi'})
+        response = self.client.post('/buckets/1/items', data=item,
+                                    headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 201)
+        self.assertIn('Successfully Added item', response.data.decode())
+
+
+    def test_add_duplicate_item(self):
+        """Should return 400 for duplicate item"""
+
+        # First add the item
+        self.test_add_item_successfully()
+        item = json.dumps({'item': 'Go to Nairobi'})
+        response = self.client.post('/buckets/1/items', data=item,
+                                    headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('item name Already exists', response.data.decode())
+
+    def tearDown(self):
+        # Drop all tables
+        with app.app_context():
+            # Drop all tables
+            db.session.remove()
+            db.drop_all()
 
 
 if __name__ == '__main__':
