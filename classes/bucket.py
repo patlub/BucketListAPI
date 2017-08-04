@@ -7,9 +7,14 @@ class Bucket(object):
     Handles all bucket operations
     """
 
-    def create_bucket(self, name, desc, user_id):
+    @staticmethod
+    def create_bucket(name, desc, user_id):
         """
-        Creates a new bucket 
+        Creates a new bucket
+        :param name: 
+        :param desc: 
+        :param user_id: 
+        :return: 
         """
         if not name:
             response = jsonify({'Error': 'Missing name'})
@@ -30,7 +35,14 @@ class Bucket(object):
         response.status_code = 201
         return response
 
-    def get_buckets(self, user_id, search):
+    @staticmethod
+    def get_buckets(user_id, search):
+        """
+        Gets all buckets
+        :param user_id: 
+        :param search: 
+        :return: 
+        """
         response = BucketModal.query.all()
         if not response:
             response = jsonify({'error': 'No bucketlist has been created'})
@@ -85,7 +97,13 @@ class Bucket(object):
                     response.status_code = 200
                     return response
 
-    def get_single_bucket(self, user_id, bucket_id):
+    @staticmethod
+    def get_single_bucket(user_id, bucket_id):
+        """
+        Gets single bucket
+        :param user_id: 
+        :param bucket_id: 
+        """
         bucket = BucketModal.query.filter_by(id=bucket_id,
                                              user_id=user_id).first()
         if not bucket:
@@ -107,7 +125,15 @@ class Bucket(object):
         response.status_code = 200
         return response
 
-    def update_bucket(self, user_id, bucket_id, bucket_name, desc):
+    @staticmethod
+    def update_bucket(user_id, bucket_id, bucket_name, desc):
+        """
+        Updates a bucket        
+        :param user_id: 
+        :param bucket_id: 
+        :param bucket_name: 
+        :param desc:  
+        """
         if not bucket_name:
             response = jsonify({'Error': 'Missing Bucket name'})
             response.status_code = 400
@@ -133,7 +159,13 @@ class Bucket(object):
         response.status_code = 200
         return response
 
-    def delete_bucket(self, user_id, bucket_id):
+    @staticmethod
+    def delete_bucket(user_id, bucket_id):
+        """
+        Deletes a bucket        
+        :param user_id: 
+        :param bucket_id: 
+        """
         bucket = BucketModal.query.filter_by(id=bucket_id,
                                              user_id=user_id).first()
         if not bucket:
