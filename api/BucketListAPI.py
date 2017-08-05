@@ -241,6 +241,26 @@ def edit_item(bucket_id, item_id):
         response.status_code = 500
         return response
 
+@app.route('/buckets/<int:bucket_id>/items/<int:item_id>', methods=['DELETE'])
+def delete_item(bucket_id, item_id):
+    """Method to handle creating a bucket"""
+    try:
+        token = request.headers.get("Authorization")
+        data = decode_auth_token(token)
+        if isinstance(data, int):
+            user_id = data
+            item = Item()
+            response = item.delete_item(user_id, item_id)
+            return response
+        else:
+            response = jsonify({'Error': 'Invalid Token'})
+            response.status_code = 400
+            return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
 
 
 def encode_auth_token(user_id):
