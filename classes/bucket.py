@@ -1,5 +1,5 @@
 from flask import jsonify
-from modals.modals import BucketModal
+from modals.modals import BucketModal, ItemModal
 
 
 class Bucket(object):
@@ -173,6 +173,11 @@ class Bucket(object):
             response = jsonify({'error': 'Bucket not found'})
             response.status_code = 400
             return response
+
+        items = ItemModal.query.filter_by(bucket_id=bucket_id)
+        if items:
+            for item in items:
+                item.delete()
 
         bucket.delete()
         response = jsonify({
