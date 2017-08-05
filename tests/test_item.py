@@ -104,7 +104,7 @@ class ItemTestCase(unittest.TestCase):
                       response.data.decode())
 
     def test_edit_item_succesfully(self):
-        """Should return 400 for missing bucket"""
+        """Should return 201 for item edited"""
 
         self.test_add_item_successfully()
         item = json.dumps({'item': 'Go to Silicon Valley'})
@@ -113,6 +113,23 @@ class ItemTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn('Successfully updated item', response.data.decode())
         self.assertIn('Go to Silicon Valley', response.data.decode())
+
+    def test_delete_item_that_doesnt_exist(self):
+        """Should return 400 for missing item"""
+
+        response = self.client.delete('/buckets/1/items/1',
+                                      headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Item with id 1 does not exist', response.data.decode())
+
+    def test_delete_item_successfully(self):
+        """Should return 201 for item deleted"""
+
+        self.test_add_item_successfully()
+        response = self.client.delete('/buckets/1/items/1',
+                                      headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 201)
+        self.assertIn('Item deleted', response.data.decode())
 
     def tearDown(self):
         # Drop all tables
