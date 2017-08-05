@@ -170,9 +170,9 @@ class Bucket(object):
         bucket = BucketModal.query.filter_by(id=bucket_id,
                                              user_id=user_id).first()
         if not bucket:
-            bucket = jsonify({'error': 'Bucket not found'})
-            bucket.status_code = 400
-            return bucket
+            response = jsonify({'error': 'Bucket not found'})
+            response.status_code = 400
+            return response
 
         bucket.delete()
         response = jsonify({
