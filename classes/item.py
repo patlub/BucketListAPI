@@ -10,7 +10,7 @@ class Item(object):
     @staticmethod
     def add_item(user_id, bucket_id, item_name):
         """
-        Creates a new bucket
+        Adds an item
                 
         :param user_id: 
         :param bucket_id: 
@@ -46,7 +46,7 @@ class Item(object):
     @staticmethod
     def edit_item(user_id, bucket_id, item_id, new_item_name):
         """
-        Creates a new bucket
+        Edits an item
 
         :param user_id: 
         :param bucket_id: 
@@ -79,6 +79,30 @@ class Item(object):
         response = jsonify({
             'Status': 'Successfully updated item',
             'item_name': new_item_name
+        })
+        response.status_code = 201
+        return response
+
+    @staticmethod
+    def delete_item(user_id, item_id):
+        """
+        Deletes an item
+
+        :param user_id: 
+        :param bucket_id:  
+        """
+        item = ItemModal.query.filter_by(id=item_id).first()
+        if not item:
+            response = jsonify({
+                'Error': 'Item with id '
+                         + str(item_id) + ' does not exist '
+            })
+            response.status_code = 400
+            return response
+
+        item.delete()
+        response = jsonify({
+            'success': 'Item deleted',
         })
         response.status_code = 201
         return response
