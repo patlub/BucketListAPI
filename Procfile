@@ -1,1 +1,1 @@
-web: gunicorn api/BucketListAPI:app
+web: gunicorn run:app
