@@ -181,7 +181,7 @@ class Bucket(object):
 
         bucket.delete()
         response = jsonify({
-            'success': 'bucket deleted',
+            'success': 'bucket deleted'
         })
         response.status_code = 200
         return response

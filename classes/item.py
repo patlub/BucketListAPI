@@ -102,7 +102,7 @@ class Item(object):
 
         item.delete()
         response = jsonify({
-            'success': 'Item deleted',
+            'success': 'Item deleted'
         })
         response.status_code = 201
         return response
