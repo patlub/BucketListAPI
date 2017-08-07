@@ -1,80 +1,321 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://localhost:5000/
 
 # BucketList
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+BucketList is a simple API allowing users to create, read, update and delete
+bucketlists
 
-## Questions Collection [/questions]
+## Register [/auth/register]
 
-### List All Questions [GET]
 
-+ Response 200 (application/json)
+### Register a new user [POST]
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+You may register a new user using this action. It takes a JSON
+object containing a name, email and password
 
 + Request (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "name": "John Doe",
+            "email": "Johndoe@gmail.com",
+            "password": "secret"
+            
         }
 
 + Response 201 (application/json)
 
     + Headers
 
-            Location: /questions/2
+            Location: /auth/register
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
+                "Status": "Johndoe@gmail.com Successfully registered",
+                "id": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MDIwNzA2MTEsImlhdCI6MTUwMjA2NzAxMSwic3ViIjo0fQ.QwmwUemah0Hl7C5EXBPS36qFlNV5-iN8pJx78jimdrI"
+            }
+            
+## Login [/auth/login]            
+
+### Login a user [POST]
+
+You may login a user using this action. It takes a JSON
+object containing an email and password
+
++ Request (application/json)
+
+        {
+            "email": "Johndoe@gmail.com",
+            "password": "secret"
+            
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /auth/register
+
+    + Body
+
+            {
+                "Status": "Johndoe@gmail.com Login Successful",
+                "id": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MDIwNzA2MTEsImlhdCI6MTUwMjA2NzAxMSwic3ViIjo0fQ.QwmwUemah0Hl7C5EXBPS36qFlNV5-iN8pJx78jimdrI"
+            }
+            
+            
+## Logout [/auth/logout]            
+
+### Logout a user [POST]
+
+You may logout a user using this action. It takes a JSON
+object containing an auth token in the header
+
++ Request (application/json)
+
+        
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Authorization: Token
+
+
+## Buckets [/buckets]            
+
+### Add a bucket [POST]
+
+You add a bucket using this action. It takes a JSON
+object containing a bucket name and description and
+Authorization token in header
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token
+    + Body
+
+            {
+                "bucket": "Travel",
+                "desc": "Places to visit"
+            }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets
+
+    + Body
+
+            {
+                'Status': 'Successfully Added bucket',
+                'id': 1
+            }
+
+
+### Retrieve buckets [GET]
+
+You retrieve buckets using this action. 
+Request contains Authorization token in header
+
+    + Headers
+
+            Authorization: Token
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets
+
+    + Body
+
+            [
+                {
+                    "date_added": "Mon, 07 Aug 2017 01:41:34 GMT",
+                    "desc": "places",
+                    "id": 1,
+                    "name": "travel",
+                    "user_id": 5
+                },
+                {
+                    "date_added": "Mon, 07 Aug 2017 01:41:34 GMT",
+                    "desc": "Eat",
+                    "id": 2,
+                    "name": "Food",
+                    "user_id": 5
+                }
+            ]
+
+
+## Buckets [/buckets/id]            
+
+### Retrieve a single bucket [GET]
+
+You retrieve a single bucket using this action. 
+Request contains Authorization token in header
+
+    + Headers
+
+            Authorization: Token
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets/id
+
+    + Body
+
+            {
+                "date_added": "Mon, 07 Aug 2017 01:41:34 GMT",
+                "desc": "places",
+                "id": 1,
+                "name": "travel",
+                "user_id": 5
+            }
+
+### Update a bucket [PUT]
+
+You update a bucket using this action. 
+Request contains Authorization token in header
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token
+        
+    + Body
+
+            {
+                "bucket": "Sports",
+                "desc": "Sports to play"
+            }
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets/id
+
+    + Body
+
+            {
+                'success': 'bucket updated',
+                'bucket': 'Sports'
+            }
+
+### Delete a bucket [DELETE]
+
+You delete a bucket using this action. 
+Request contains Authorization token in header
+
+
+    + Headers
+
+            Authorization: Token
+        
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets/id
+
+    + Body
+
+            {
+                'success': 'bucket deleted'
+            }
+
+## Add Items [/buckets/id/items]            
+
+### Add an item [POST]
+
+You add an item using this action. It takes a JSON
+object containing an item name
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token
+    + Body
+
+            {
+                "item": "Go to NewYork"
+            }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets/id/items
+
+    + Body
+
+            {
+                'Status': 'Successfully Added item',
+                'id': 1
+            }
+
+## Items [/buckets/id/items/item_id]            
+
+### edit an item [PUT]
+
+You edit an item using this action. It takes a JSON
+object containing an item name
+
++ Request (application/json)
+
+
+    + Headers
+
+            Authorization: Token
+    + Body
+
+            {
+                "item": "Go to Silicon Valley"
+            }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets/id/items/item_id
+
+    + Body
+
+            {
+                'Status': 'Successfully updated item',
+                'item_name': "Go to Silicon Valley"
+            }
+
+### delete an item [DELETE]
+
+You delete an item using this action. It takes a JSON
+object containing an item name
+
+
+    + Headers
+
+            Authorization: Token
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /buckets/id/items/item_id
+
+    + Body
+
+            {
+                'success': 'Item deleted'
             }
