@@ -48,7 +48,7 @@ class ItemTestCase(unittest.TestCase):
             'bucket': 'Travel',
             'desc': 'Visit places'
         })
-        self.client.post('/bucket', data=bucket,
+        self.client.post('/buckets', data=bucket,
                          headers={"Authorization": self.token})
 
         item = json.dumps({'item': 'Go to Nairobi'})
@@ -94,7 +94,7 @@ class ItemTestCase(unittest.TestCase):
             'bucket': 'Travel',
             'desc': 'Visit places'
         })
-        self.client.post('/bucket', data=bucket,
+        self.client.post('/buckets', data=bucket,
                          headers={"Authorization": self.token})
         item = json.dumps({'item': 'Go to New York'})
         response = self.client.put('/buckets/1/items/1', data=item,
