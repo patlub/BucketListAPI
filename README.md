@@ -1,4 +1,4 @@
-![Patrick Luboobi](https://img.shields.io/badge/Patrick%20Luboobi-BucketListAPI-green.svg)
+[![Patrick Luboobi](https://img.shields.io/badge/Patrick%20Luboobi-BucketListAPI-green.svg)]()
 [![Build Status](https://travis-ci.org/patlub/BucketListAPI.svg?branch=dev)](https://travis-ci.org/patlub/BucketListAPI)
 [![Coverage Status](https://coveralls.io/repos/github/patlub/BucketListAPI/badge.svg?branch=dev)](https://coveralls.io/github/patlub/BucketListAPI?branch=dev)
 [![Code Climate](https://codeclimate.com/github/patlub/BucketListAPI/badges/gpa.svg)](https://codeclimate.com/github/patlub/bucketListAPI)
