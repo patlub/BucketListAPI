@@ -7,7 +7,7 @@ from classes.authenticate import Authenticate
 from classes.bucket import Bucket
 from classes.item import Item
 
-app = create_app('DevelopmentEnv')
+app = create_app('ProductionEnv')
 
 
 @app.route('/')
@@ -308,7 +308,3 @@ def decode_auth_token(auth_token):
         })
         response.status_code = 401
         return response
-
-
-if __name__ == '__main__':
-    app.run()
