@@ -2,6 +2,7 @@ from flask import Flask
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 from instance.config import application_config
+from flask_restplus import Api, Resource, fields
 
 db = SQLAlchemy()
 

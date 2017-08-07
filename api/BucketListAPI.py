@@ -79,7 +79,7 @@ def reset_password():
         return response
 
 
-@app.route('/bucket', methods=['POST'])
+@app.route('/buckets', methods=['POST'])
 def add_bucket():
     """Method to handle creating a bucket"""
     request.get_json(force=True)
@@ -218,6 +218,7 @@ def add_item(bucket_id):
         response.status_code = 500
         return response
 
+
 @app.route('/buckets/<int:bucket_id>/items/<int:item_id>', methods=['PUT'])
 def edit_item(bucket_id, item_id):
     """Method to handle creating a bucket"""
@@ -240,6 +241,7 @@ def edit_item(bucket_id, item_id):
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
+
 
 @app.route('/buckets/<int:bucket_id>/items/<int:item_id>', methods=['DELETE'])
 def delete_item(bucket_id, item_id):
@@ -271,7 +273,7 @@ def encode_auth_token(user_id):
     try:
         payload = {
             'exp': datetime.datetime.utcnow() +
-                   datetime.timedelta(days=0, seconds=5),
+                   datetime.timedelta(days=0, seconds=3600),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }

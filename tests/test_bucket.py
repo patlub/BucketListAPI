@@ -30,7 +30,7 @@ class BucketTestCase(unittest.TestCase):
             'bucket': '',
             'desc': 'travel'
         })
-        response = self.client.post('/bucket', data=bucket,
+        response = self.client.post('/buckets', data=bucket,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 400)
         self.assertIn('Missing', response.data.decode())
@@ -41,7 +41,7 @@ class BucketTestCase(unittest.TestCase):
             'bucket': 'Travel',
             'desc': 'Visit places'
         })
-        response = self.client.post('/bucket', data=bucket,
+        response = self.client.post('/buckets', data=bucket,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
         self.assertIn('Successfully', response.data.decode())
@@ -55,7 +55,7 @@ class BucketTestCase(unittest.TestCase):
             'bucket': 'Travel',
             'desc': 'travel'
         })
-        response = self.client.post('/bucket', data=bucket,
+        response = self.client.post('/buckets', data=bucket,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 400)
         self.assertIn('Bucket name Already exists', response.data.decode())
