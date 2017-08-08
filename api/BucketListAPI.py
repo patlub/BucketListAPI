@@ -249,9 +249,8 @@ def delete_item(bucket_id, item_id):
         token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
-            user_id = data
             item = Item()
-            response = item.delete_item(user_id, item_id)
+            response = item.delete_item(item_id)
             return response
         else:
             response = jsonify({'Error': 'Invalid Token'})

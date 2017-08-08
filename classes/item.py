@@ -84,12 +84,11 @@ class Item(object):
         return response
 
     @staticmethod
-    def delete_item(user_id, item_id):
+    def delete_item(item_id):
         """
         Deletes an item
 
-        :param user_id: 
-        :param bucket_id:  
+        :param item_id:  
         """
         item = ItemModal.query.filter_by(id=item_id).first()
         if not item:
