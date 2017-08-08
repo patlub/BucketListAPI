@@ -17,8 +17,7 @@ class AuthenticationTestCase(unittest.TestCase):
 
     def test_index_route(self):
         response = self.client.get('/')
-        self.assertEqual(response.status_code, 201)
-        self.assertIn('Welcome Message', response.data.decode())
+        self.assertIn('Welcome to the BucketList API', response.data.decode())
 
     def test_registration_with_missing_dredentials(self):
         """Should throw error for missing credentials"""
