@@ -26,11 +26,7 @@ def register():
         password = request.json['password']
         user = Authenticate()
         response = user.register(email, password, name)
-        if response.status_code == 201:
-            data = json.loads(response.data.decode())
-            data['id'] = encode_auth_token(data['id']).decode()
-            response = jsonify(data)
-            response.status_code = 201
+        response = auth_success(response)
         return response
 
     except KeyError:
@@ -48,17 +44,22 @@ def login():
         password = request.json['password']
         user = Authenticate()
         response = user.login(email, password)
-        if response.status_code == 201:
-            data = json.loads(response.data.decode())
-            data['id'] = encode_auth_token(data['id']).decode()
-            response = jsonify(data)
-            response.status_code = 201
+        response = auth_success(response)
         return response
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
+
+
+def auth_success(response):
+    if response.status_code == 201:
+        data = json.loads(response.data.decode())
+        data['id'] = encode_auth_token(data['id']).decode()
+        response = jsonify(data)
+        response.status_code = 201
+    return response
 
 
 @app.route('/auth/reset-password', methods=['POST'])
@@ -82,7 +83,7 @@ def add_bucket():
     """Method to handle creating a bucket"""
     request.get_json(force=True)
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         user_id = decode_auth_token(token)
         if isinstance(user_id, int):
             bucket_name = request.json['bucket']
@@ -104,7 +105,7 @@ def add_bucket():
 def get_buckets():
     """Method to handle getting all buckets"""
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
             user_id = data
@@ -127,7 +128,7 @@ def get_buckets():
 def get_single_bucket(bucket_id):
     """Method to handle getting a single bucket"""
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
             user_id = data
@@ -150,7 +151,7 @@ def update_bucket(bucket_id):
     """Method to handle updating a bucket"""
     request.get_json(force=True)
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
             bucket_name = request.json['bucket']
@@ -175,7 +176,7 @@ def update_bucket(bucket_id):
 def delete_bucket(bucket_id):
     """Method to handle creating a bucket"""
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
             user_id = data
@@ -198,7 +199,7 @@ def add_item(bucket_id):
     """Method to handle creating a bucket"""
     request.get_json(force=True)
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
             item_name = request.json['item']
@@ -222,7 +223,7 @@ def edit_item(bucket_id, item_id):
     """Method to handle creating a bucket"""
     request.get_json(force=True)
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
             item_name = request.json['item']
@@ -245,7 +246,7 @@ def edit_item(bucket_id, item_id):
 def delete_item(bucket_id, item_id):
     """Method to handle creating a bucket"""
     try:
-        token = request.headers.get("Authorization")
+        token = get_token()
         data = decode_auth_token(token)
         if isinstance(data, int):
             user_id = data
@@ -261,6 +262,10 @@ def delete_item(bucket_id, item_id):
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
+
+
+def get_token():
+    return request.headers.get("Authorization")
 
 
 def encode_auth_token(user_id):
