@@ -1,7 +1,7 @@
 import datetime
 
 import jwt
-from flask import jsonify, request, json
+from flask import jsonify, request, json, render_template
 from api import create_app
 from classes.authenticate import Authenticate
 from classes.bucket import Bucket
@@ -10,12 +10,10 @@ from classes.item import Item
 app = create_app('ProductionEnv')
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     """Index route"""
-    response = jsonify({'Welcome Message': 'Hello'})
-    response.status_code = 201
-    return response
+    return render_template('index.html')
 
 
 @app.route('/auth/register', methods=['POST'])
