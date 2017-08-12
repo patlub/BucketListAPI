@@ -6,9 +6,10 @@ from api import create_app
 from classes.authenticate import Authenticate
 from classes.bucket import Bucket
 from classes.item import Item
+from flask_cors import CORS, cross_origin
 
 app = create_app('ProductionEnv')
-
+CORS(app)
 
 @app.route('/', methods=['GET'])
 def index():
