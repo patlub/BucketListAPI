@@ -8,6 +8,33 @@ class Item(object):
     """
 
     @staticmethod
+    def get_items(bucket_id):
+        """
+        Gets all items
+        :param bucket_id: 
+        :return: 
+        """
+        response = ItemModal.query.filter_by(bucket_id=bucket_id)
+        if not response:
+            response = jsonify({'error': 'No item has been created'})
+            response.status_code = 200
+            return response
+        else:
+            item_data = []
+
+            for data in response:
+                final = {
+                    'id': data.id,
+                    'name': data.name,
+                    'status': data.status,
+                    'date_added': data.date_added
+                }
+                item_data.append(final)
+            response = jsonify(item_data)
+            response.status_code = 200
+            return response
+
+    @staticmethod
     def add_item(user_id, bucket_id, item_name):
         """
         Adds an item
@@ -37,8 +64,10 @@ class Item(object):
 
         item.save()
         response = jsonify({
-            'Status': 'Successfully Added item',
-            'id': item.id
+            'id': item.id,
+            'name': item.name,
+            'status': item.status,
+            'date_added': item.date_added
         })
         response.status_code = 201
         return response
