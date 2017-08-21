@@ -29,8 +29,13 @@ class Bucket(object):
 
         bucket.save()
         response = jsonify({
-            'Status': 'Successfully Added bucket',
-            'id': bucket.id
+            # 'Status': 'Successfully Added bucket',
+            # 'id': bucket.id
+            'id': bucket.id,
+            'name': bucket.name,
+            'desc': bucket.desc,
+            'date_added': bucket.date_added,
+            'user_id': bucket.user_id
         })
         response.status_code = 201
         return response

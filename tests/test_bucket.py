@@ -44,7 +44,7 @@ class BucketTestCase(unittest.TestCase):
         response = self.client.post('/buckets', data=bucket,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
-        self.assertIn('Successfully', response.data.decode())
+        self.assertIn('Travel', response.data.decode())
 
     def test_add_bucket_with_existing_bucket_name(self):
         """Should return 400 for missing bucket name"""
