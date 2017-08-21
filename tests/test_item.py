@@ -55,7 +55,7 @@ class ItemTestCase(unittest.TestCase):
         response = self.client.post('/buckets/1/items', data=item,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
-        self.assertIn('Successfully Added item', response.data.decode())
+        self.assertIn('Go to Nairobi', response.data.decode())
 
     def test_add_duplicate_item(self):
         """Should return 400 for duplicate item"""
