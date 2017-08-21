@@ -61,7 +61,7 @@ class BucketTestCase(unittest.TestCase):
         self.assertIn('Bucket name Already exists', response.data.decode())
 
     def test_get_bucket_when_DB_is_empty(self):
-        """Should return all buckets lists"""
+        """Should return no buckets lists msg"""
         response = self.client.get('/buckets',
                                    headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 200)
