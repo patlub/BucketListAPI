@@ -64,7 +64,7 @@ class BucketTestCase(unittest.TestCase):
         """Should return no buckets lists msg"""
         response = self.client.get('/buckets',
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
         self.assertIn('No bucketlist has been created',
                       response.data.decode())
 
