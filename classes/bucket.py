@@ -29,8 +29,6 @@ class Bucket(object):
 
         bucket.save()
         response = jsonify({
-            # 'Status': 'Successfully Added bucket',
-            # 'id': bucket.id
             'id': bucket.id,
             'name': bucket.name,
             'desc': bucket.desc,
