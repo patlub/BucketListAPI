@@ -57,6 +57,27 @@ class ItemTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn('Go to Nairobi', response.data.decode())
 
+
+    def test_get_items_when_DB_empty(self):
+        """Should return no items msg"""
+
+        response = self.client.get('/items/1',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('No item has been created',
+                      response.data.decode())
+
+    def test_get_items(self):
+        """Should return all buckets items"""
+
+        # First add item
+        self.test_add_item_successfully()
+        response = self.client.get('/items/1',
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Go to Nairobi',
+                      response.data.decode())
+
     def test_add_duplicate_item(self):
         """Should return 400 for duplicate item"""
 
