@@ -14,15 +14,16 @@ class Item(object):
         :param bucket_id: 
         :return: 
         """
-        response = ItemModal.query.filter_by(bucket_id=bucket_id)
+        response = ItemModal.query.all()
         if not response:
             response = jsonify({'error': 'No item has been created'})
             response.status_code = 200
             return response
         else:
+            res = [item for item in
+                   response if item.bucket_id == bucket_id]
             item_data = []
-
-            for data in response:
+            for data in res:
                 final = {
                     'id': data.id,
                     'name': data.name,
