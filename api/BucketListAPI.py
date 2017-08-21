@@ -194,6 +194,28 @@ def delete_bucket(bucket_id):
         return response
 
 
+@app.route('/items/<int:bucket_id>', methods=['GET'])
+def get_items(bucket_id):
+    """Method to handle getting all items in a bucket"""
+    try:
+        token = get_token()
+        data = decode_auth_token(token)
+        if isinstance(data, int):
+            item = Item()
+            response = item.get_items(bucket_id)
+            return response
+        else:
+            response = jsonify({'Error': 'Invalid Token'})
+            response.status_code = 400
+            return response
+
+    except KeyError:
+        response = jsonify({'Error': 'Invalid Keys detected'})
+        response.status_code = 500
+        return response
+
+
+
 @app.route('/buckets/<int:bucket_id>/items', methods=['POST'])
 def add_item(bucket_id):
     """Method to handle creating a bucket"""
