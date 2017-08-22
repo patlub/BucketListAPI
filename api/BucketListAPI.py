@@ -68,8 +68,10 @@ def reset_password():
     request.get_json(force=True)
     try:
         email = request.json['email']
+        old_password = request.json['old_password']
+        new_password = request.json['new_password']
         user = Authenticate()
-        response = user.reset_password(email)
+        response = user.reset_password(email, old_password, new_password)
         return response
 
     except KeyError:
@@ -203,7 +205,6 @@ def get_items(bucket_id):
         return response
 
 
-
 @app.route('/buckets/<int:bucket_id>/items', methods=['POST'])
 def add_item(bucket_id):
     """Method to handle creating a bucket"""
@@ -265,6 +266,7 @@ def delete_item(bucket_id, item_id):
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
+
 
 def invalid_token():
     response = jsonify({'Error': 'Invalid Token'})
