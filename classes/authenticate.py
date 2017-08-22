@@ -87,28 +87,37 @@ class Authenticate(object):
         return response
 
     @staticmethod
-    def reset_password(email):
+    def reset_password(email, old_password, new_password):
         """
         resets password of an existing user
         and returns an API response with status
         code set to 201 on success
         
-        :param email:  
+        :param email: 
+        :param old_password: 
+        :param new_password: 
+        :return: 
         """
-        if not email:
-            response = jsonify({'Error': 'No email sent'})
+        if not email or not old_password or not new_password:
+            response = jsonify({'Error': 'Missing email or password'})
             response.status_code = 400
             return response
 
-        if not validate_email(email):
-            response = jsonify({'Error': 'Enter valid email'})
+        user = UserModal.query.filter_by(email=email).first()
+
+        # if user and user.check_password(user.password,
+        #                                      old_password):
+
+        if not user or not user.check_password(user.password, old_password):
+            response = jsonify({'Error': 'Email and password does not exist'})
             response.status_code = 400
             return response
 
-        user = UserModal(email=email, password='')
-        user_data = user.query.filter_by(email=email).first()
-        if user_data:
-            return 0
-        response = jsonify({'Error': 'Email does not exist'})
-        response.status_code = 400
+        user.password = new_password
+        user.update()
+        response = jsonify({
+            'success': 'password updated',
+        })
+        response.status_code = 200
         return response
+
