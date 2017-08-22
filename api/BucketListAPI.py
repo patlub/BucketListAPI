@@ -110,9 +110,15 @@ def get_buckets():
         if isinstance(data, int):
             user_id = data
             search = request.args.get("q", "")
+            limit = request.args.get("limit", "")
             bucket = Bucket()
+            if limit:
+                limit = int(limit)
+                response = bucket.get_buckets(user_id, search, limit)
+                return response
             response = bucket.get_buckets(user_id, search)
             return response
+
         else:
             return invalid_token()
 
