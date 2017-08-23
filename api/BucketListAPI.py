@@ -68,8 +68,10 @@ def reset_password():
     request.get_json(force=True)
     try:
         email = request.json['email']
+        old_password = request.json['old_password']
+        new_password = request.json['new_password']
         user = Authenticate()
-        response = user.reset_password(email)
+        response = user.reset_password(email, old_password, new_password)
         return response
 
     except KeyError:
@@ -91,9 +93,7 @@ def add_bucket():
             bucket = Bucket()
             response = bucket.create_bucket(bucket_name, desc, user_id)
             return response
-        response = jsonify({'Error': 'Invalid Token'})
-        response.status_code = 400
-        return response
+        return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -110,13 +110,17 @@ def get_buckets():
         if isinstance(data, int):
             user_id = data
             search = request.args.get("q", "")
+            limit = request.args.get("limit", "")
             bucket = Bucket()
+            if limit:
+                limit = int(limit)
+                response = bucket.get_buckets(user_id, search, limit)
+                return response
             response = bucket.get_buckets(user_id, search)
             return response
+
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -136,9 +140,7 @@ def get_single_bucket(bucket_id):
             response = bucket.get_single_bucket(user_id, bucket_id)
             return response
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -162,9 +164,7 @@ def update_bucket(bucket_id):
                                             bucket_name, desc)
             return response
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -184,9 +184,7 @@ def delete_bucket(bucket_id):
             response = bucket.delete_bucket(user_id, bucket_id)
             return response
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -205,15 +203,12 @@ def get_items(bucket_id):
             response = item.get_items(bucket_id)
             return response
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
-
 
 
 @app.route('/buckets/<int:bucket_id>/items', methods=['POST'])
@@ -230,9 +225,7 @@ def add_item(bucket_id):
             response = item.add_item(user_id, bucket_id, item_name)
             return response
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -254,9 +247,7 @@ def edit_item(bucket_id, item_id):
             response = item.edit_item(user_id, bucket_id, item_id, item_name)
             return response
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
@@ -275,14 +266,18 @@ def delete_item(bucket_id, item_id):
             response = item.delete_item(item_id)
             return response
         else:
-            response = jsonify({'Error': 'Invalid Token'})
-            response.status_code = 400
-            return response
+            return invalid_token()
 
     except KeyError:
         response = jsonify({'Error': 'Invalid Keys detected'})
         response.status_code = 500
         return response
+
+
+def invalid_token():
+    response = jsonify({'Error': 'Invalid Token'})
+    response.status_code = 400
+    return response
 
 
 def get_token():

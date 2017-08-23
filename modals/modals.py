@@ -36,6 +36,11 @@ class UserModal(db.Model):
         db.session.commit()
 
     @staticmethod
+    def update():
+        """Updates user"""
+        db.session.commit()
+
+    @staticmethod
     def get_all():
         """Get all Users"""
         return UserModal.query.all()

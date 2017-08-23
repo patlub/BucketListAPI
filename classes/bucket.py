@@ -39,17 +39,18 @@ class Bucket(object):
         return response
 
     @staticmethod
-    def get_buckets(user_id, search):
+    def get_buckets(user_id, search, limit=None):
         """
         Gets all buckets
         :param user_id: 
         :param search: 
         :return: 
         """
-        response = BucketModal.query.all()
+
+        response = BucketModal.query.limit(limit).all()
         if not response:
             response = jsonify({'error': 'No bucketlist has been created'})
-            response.status_code = 200
+            response.status_code = 404
             return response
         else:
             if search:

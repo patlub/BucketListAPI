@@ -121,17 +121,19 @@ class AuthenticationTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn('Login Successful', response.data.decode())
 
-    def test_reset_password_with_no_email(self):
+    def test_reset_password_with_no_password(self):
         """Should throe error for non existing email"""
 
         # First of all register
         self.test_successfull_registration()
         user = json.dumps({
-            'email': ''
+            'email': 'johndoe@gmail.com',
+            'old_password': '',
+            'new_password': ''
         })
         response = self.client.post('/auth/reset-password', data=user)
         self.assertEqual(response.status_code, 400)
-        self.assertIn('No email sent', response.data.decode())
+        self.assertIn('Missing email or password', response.data.decode())
 
     def test_reset_password_for_non_exisiting_email(self):
         """Should throe error for non existing email"""
@@ -139,11 +141,41 @@ class AuthenticationTestCase(unittest.TestCase):
         # First of all register
         self.test_successfull_registration()
         user = json.dumps({
-            'email': 'andela@gmail.com'
+            'email': 'andela@gmail.com',
+            'old_password': 'secret',
+            'new_password': 'qwerty'
         })
         response = self.client.post('/auth/reset-password', data=user)
         self.assertEqual(response.status_code, 400)
-        self.assertIn('Email does not exist', response.data.decode())
+        self.assertIn('Email and password does not exist', response.data.decode())
+
+    def test_reset_password_with_wrong_password(self):
+        """Should throw 400 error for wrong password"""
+
+        # First of all register
+        self.test_successfull_registration()
+        user = json.dumps({
+            'email': 'andela@gmail.com',
+            'old_password': 'secret',
+            'new_password': 'qwerty'
+        })
+        response = self.client.post('/auth/reset-password', data=user)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Email and password does not exist', response.data.decode())
+
+    def test_reset_password_successfully(self):
+        """Should throw 400 error for wrong password"""
+
+        # First of all register
+        self.test_successfull_registration()
+        user = json.dumps({
+            'email': 'patrick@gmail.com',
+            'old_password': 'patrickluboobi',
+            'new_password': 'qwerty'
+        })
+        response = self.client.post('/auth/reset-password', data=user)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('password updated', response.data.decode())
 
     def tearDown(self):
         # Drop all tables
