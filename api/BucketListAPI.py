@@ -209,8 +209,10 @@ def edit_item(bucket_id, item_id):
         user_id = get_token()
         if isinstance(user_id, int):
             item_name = request.json['item']
+            item_status = request.json['status']
             item = Item()
-            response = item.edit_item(user_id, bucket_id, item_id, item_name)
+            response = item.edit_item(user_id, bucket_id, item_id,
+                                      item_name, item_status)
             return response
         else:
             return invalid_token()
