@@ -30,9 +30,7 @@ def register():
         return response
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/auth/login', methods=['POST'])
@@ -48,9 +46,7 @@ def login():
         return response
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 def auth_success(response):
@@ -75,9 +71,7 @@ def reset_password():
         return response
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets', methods=['POST'])
@@ -85,8 +79,7 @@ def add_bucket():
     """Method to handle creating a bucket"""
     request.get_json(force=True)
     try:
-        token = get_token()
-        user_id = decode_auth_token(token)
+        user_id = get_token()
         if isinstance(user_id, int):
             bucket_name = request.json['bucket']
             desc = request.json['desc']
@@ -96,19 +89,15 @@ def add_bucket():
         return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets', methods=['GET'])
 def get_buckets():
     """Method to handle getting all buckets"""
     try:
-        token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
-            user_id = data
+        user_id = get_token()
+        if isinstance(user_id, int):
             search = request.args.get("q", "")
             limit = request.args.get("limit", "")
             bucket = Bucket()
@@ -123,19 +112,15 @@ def get_buckets():
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets/<int:bucket_id>', methods=['GET'])
 def get_single_bucket(bucket_id):
     """Method to handle getting a single bucket"""
     try:
-        token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
-            user_id = data
+        user_id = get_token()
+        if isinstance(user_id, int):
             bucket = Bucket()
             response = bucket.get_single_bucket(user_id, bucket_id)
             return response
@@ -143,9 +128,7 @@ def get_single_bucket(bucket_id):
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets/<int:bucket_id>', methods=['PUT'])
@@ -153,12 +136,10 @@ def update_bucket(bucket_id):
     """Method to handle updating a bucket"""
     request.get_json(force=True)
     try:
-        token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
+        user_id = get_token()
+        if isinstance(user_id, int):
             bucket_name = request.json['bucket']
             desc = request.json['desc']
-            user_id = data
             bucket = Bucket()
             response = bucket.update_bucket(user_id, bucket_id,
                                             bucket_name, desc)
@@ -167,19 +148,15 @@ def update_bucket(bucket_id):
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets/<int:bucket_id>', methods=['DELETE'])
 def delete_bucket(bucket_id):
     """Method to handle creating a bucket"""
     try:
-        token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
-            user_id = data
+        user_id = get_token()
+        if isinstance(user_id, int):
             bucket = Bucket()
             response = bucket.delete_bucket(user_id, bucket_id)
             return response
@@ -187,18 +164,15 @@ def delete_bucket(bucket_id):
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/items/<int:bucket_id>', methods=['GET'])
 def get_items(bucket_id):
     """Method to handle getting all items in a bucket"""
     try:
-        token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
+        user_id = get_token()
+        if isinstance(user_id, int):
             item = Item()
             response = item.get_items(bucket_id)
             return response
@@ -206,9 +180,7 @@ def get_items(bucket_id):
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets/<int:bucket_id>/items', methods=['POST'])
@@ -216,11 +188,9 @@ def add_item(bucket_id):
     """Method to handle creating a bucket"""
     request.get_json(force=True)
     try:
-        token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
+        user_id = get_token()
+        if isinstance(user_id, int):
             item_name = request.json['item']
-            user_id = data
             item = Item()
             response = item.add_item(user_id, bucket_id, item_name)
             return response
@@ -228,9 +198,7 @@ def add_item(bucket_id):
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets/<int:bucket_id>/items/<int:item_id>', methods=['PUT'])
@@ -238,11 +206,9 @@ def edit_item(bucket_id, item_id):
     """Method to handle creating a bucket"""
     request.get_json(force=True)
     try:
-        token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
+        user_id = get_token()
+        if isinstance(user_id, int):
             item_name = request.json['item']
-            user_id = data
             item = Item()
             response = item.edit_item(user_id, bucket_id, item_id, item_name)
             return response
@@ -250,9 +216,7 @@ def edit_item(bucket_id, item_id):
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 @app.route('/buckets/<int:bucket_id>/items/<int:item_id>', methods=['DELETE'])
@@ -260,8 +224,7 @@ def delete_item(bucket_id, item_id):
     """Method to handle creating a bucket"""
     try:
         token = get_token()
-        data = decode_auth_token(token)
-        if isinstance(data, int):
+        if isinstance(token, int):
             item = Item()
             response = item.delete_item(item_id)
             return response
@@ -269,9 +232,7 @@ def delete_item(bucket_id, item_id):
             return invalid_token()
 
     except KeyError:
-        response = jsonify({'Error': 'Invalid Keys detected'})
-        response.status_code = 500
-        return response
+        return invalid_keys()
 
 
 def invalid_token():
@@ -279,9 +240,14 @@ def invalid_token():
     response.status_code = 400
     return response
 
+def invalid_keys():
+    response = jsonify({'Error': 'Invalid Keys detected'})
+    response.status_code = 400
+    return response
+
 
 def get_token():
-    return request.headers.get("Authorization")
+    return decode_auth_token(request.headers.get("Authorization"))
 
 
 def encode_auth_token(user_id):
