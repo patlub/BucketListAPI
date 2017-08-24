@@ -46,7 +46,7 @@ class Item(object):
         """
         if not item_name:
             response = jsonify({'Error': 'Missing Item name'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         bucket = BucketModal.query.filter_by(id=bucket_id,
@@ -54,13 +54,13 @@ class Item(object):
         if not bucket:
             response = jsonify({'Error': 'Bucket with id '
                                          + str(user_id) + ' not found'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         item = ItemModal(name=item_name, bucket_id=bucket_id)
         if item.query.filter_by(name=item_name).first():
             response = jsonify({'Error': 'item name Already exists'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         item.save()
@@ -74,7 +74,7 @@ class Item(object):
         return response
 
     @staticmethod
-    def edit_item(user_id, bucket_id, item_id, new_item_name):
+    def edit_item(user_id, bucket_id, item_id, new_item_name, new_item_status):
         """
         Edits an item
 
@@ -82,10 +82,11 @@ class Item(object):
         :param bucket_id: 
         :param item_id: 
         :param new_item_name: 
+        :param new_item_status: 
         """
-        if not new_item_name:
-            response = jsonify({'Error': 'Missing Item name'})
-            response.status_code = 400
+        if not new_item_name and not new_item_status:
+            response = jsonify({'Error': 'Missing parameters'})
+            response.status_code = 200
             return response
 
         bucket = BucketModal.query.filter_by(id=bucket_id,
@@ -93,7 +94,7 @@ class Item(object):
         if not bucket:
             response = jsonify({'Error': 'Bucket with id '
                                          + str(user_id) + ' not found'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         item = ItemModal.query.filter_by(id=item_id, bucket_id=bucket_id).first()
@@ -101,10 +102,11 @@ class Item(object):
             response = jsonify({
                 'Error': 'item with id ' + str(item_id) + ' does not exist'
             })
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         item.name = new_item_name
+        item.status = new_item_status
         item.save()
         response = jsonify({
             'Status': 'Successfully updated item',
@@ -126,7 +128,7 @@ class Item(object):
                 'Error': 'Item with id '
                          + str(item_id) + ' does not exist '
             })
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         item.delete()
