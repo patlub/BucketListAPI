@@ -21,24 +21,24 @@ class Authenticate(object):
         """
         if not name or not email or not password:
             response = jsonify({'Error': 'Missing Values'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         if not validate_email(email):
             response = jsonify({'Error': 'Invalid Email'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         if len(password) < 6:
             response = jsonify({'Error': 'Password is short'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         user = UserModal(email=email, password=password, name=name)
 
         if user.query.filter_by(email=email).first():
             response = jsonify({'Error': 'Email Already exists'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         user.save()
@@ -61,12 +61,12 @@ class Authenticate(object):
         """
         if not email or not password:
             response = jsonify({'Error': 'Missing login credentials'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         if not validate_email(email):
             response = jsonify({'Error': 'Enter valid email'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         user = UserModal(email=email, password=password)
@@ -83,7 +83,7 @@ class Authenticate(object):
             return response
 
         response = jsonify({'Error': 'Incorrect email or password'})
-        response.status_code = 400
+        response.status_code = 200
         return response
 
     @staticmethod
@@ -100,7 +100,7 @@ class Authenticate(object):
         """
         if not email or not old_password or not new_password:
             response = jsonify({'Error': 'Missing email or password'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         user = UserModal.query.filter_by(email=email).first()
@@ -110,7 +110,7 @@ class Authenticate(object):
 
         if not user or not user.check_password(user.password, old_password):
             response = jsonify({'Error': 'Email and password does not exist'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         user.password = new_password
