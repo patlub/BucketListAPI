@@ -27,7 +27,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'password': ''
         })
         response = self.client.post('/auth/register', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Missing', response.data.decode())
 
     def test_registration_with_invalid_email(self):
@@ -38,7 +38,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'password': 'patrick'
         })
         response = self.client.post('/auth/register', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Invalid Email', response.data.decode())
 
     def test_registration_with_short_password(self):
@@ -49,7 +49,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'password': 'pato'
         })
         response = self.client.post('/auth/register', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Password is short', response.data.decode())
 
     def test_for_existing_email(self):
@@ -61,7 +61,7 @@ class AuthenticationTestCase(unittest.TestCase):
         })
         self.client.post('/auth/register', data=user)
         response = self.client.post('/auth/register', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Email Already exists', response.data.decode())
 
     def test_successfull_registration(self):
@@ -82,7 +82,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'password': ''
         })
         response = self.client.post('/auth/login', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Missing login credentials', response.data.decode())
 
     def test_login_with_invalid_email(self):
@@ -92,7 +92,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'password': 'patrickluboobi'
         })
         response = self.client.post('/auth/login', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Enter valid email', response.data.decode())
 
     def test_incorrect_login_credentials(self):
@@ -105,7 +105,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'password': 'incorrect'
         })
         response = self.client.post('/auth/login', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Incorrect email or password', response.data.decode())
 
     def test_successful_login(self):
@@ -132,7 +132,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'new_password': ''
         })
         response = self.client.post('/auth/reset-password', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Missing email or password', response.data.decode())
 
     def test_reset_password_for_non_exisiting_email(self):
@@ -146,7 +146,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'new_password': 'qwerty'
         })
         response = self.client.post('/auth/reset-password', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Email and password does not exist', response.data.decode())
 
     def test_reset_password_with_wrong_password(self):
@@ -160,7 +160,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'new_password': 'qwerty'
         })
         response = self.client.post('/auth/reset-password', data=user)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Email and password does not exist', response.data.decode())
 
     def test_reset_password_successfully(self):
