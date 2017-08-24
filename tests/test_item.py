@@ -29,7 +29,7 @@ class ItemTestCase(unittest.TestCase):
         item = json.dumps({'item': ''})
         response = self.client.post('/buckets/1/items', data=item,
                                     headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Missing Item name', response.data.decode())
 
     def test_add_item_when_bucket_doesnt_exist(self):
@@ -37,7 +37,7 @@ class ItemTestCase(unittest.TestCase):
         item = json.dumps({'item': 'Go to Nairobi'})
         response = self.client.post('/buckets/1/items', data=item,
                                     headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Bucket with id 1 not found', response.data.decode())
 
     def test_add_item_successfully(self):
@@ -85,25 +85,31 @@ class ItemTestCase(unittest.TestCase):
         item = json.dumps({'item': 'Go to Nairobi'})
         response = self.client.post('/buckets/1/items', data=item,
                                     headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('item name Already exists', response.data.decode())
 
     def test_edit_item_with_no_name(self):
         """Should return 400 for missing item name"""
 
-        item = json.dumps({'item': ''})
+        item = json.dumps({
+            'item': '',
+            'status': ''
+        })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Missing Item name', response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Missing parameters', response.data.decode())
 
     def test_edit_item_with_missing_bucket(self):
         """Should return 400 for missing bucket"""
 
-        item = json.dumps({'item': 'Go to New York'})
+        item = json.dumps({
+            'item': 'Go to New York',
+            'status': ''
+        })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Bucket with id 1 not found', response.data.decode())
 
     def test_edit_item_with_missing_item(self):
@@ -116,10 +122,13 @@ class ItemTestCase(unittest.TestCase):
         })
         self.client.post('/buckets', data=bucket,
                          headers={"Authorization": self.token})
-        item = json.dumps({'item': 'Go to New York'})
+        item = json.dumps({
+            'item': 'Go to New York',
+            'status': ''
+        })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('item with id 1 does not exist',
                       response.data.decode())
 
@@ -127,7 +136,10 @@ class ItemTestCase(unittest.TestCase):
         """Should return 201 for item edited"""
 
         self.test_add_item_successfully()
-        item = json.dumps({'item': 'Go to Silicon Valley'})
+        item = json.dumps({
+            'item': 'Go to Silicon Valley',
+            'status': ''
+        })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
@@ -139,7 +151,7 @@ class ItemTestCase(unittest.TestCase):
 
         response = self.client.delete('/buckets/1/items/1',
                                       headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('Item with id 1 does not exist', response.data.decode())
 
     def test_delete_item_successfully(self):
