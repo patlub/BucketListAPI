@@ -57,7 +57,6 @@ class ItemTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn('Go to Nairobi', response.data.decode())
 
-
     def test_get_items_when_DB_empty(self):
         """Should return no items msg"""
 
