@@ -18,13 +18,13 @@ class Bucket(object):
         """
         if not name:
             response = jsonify({'Error': 'Missing name'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         bucket = BucketModal(name=name, desc=desc, user_id=user_id)
         if bucket.query.filter_by(name=name).first():
             response = jsonify({'Error': 'Bucket name Already exists'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         bucket.save()
@@ -50,7 +50,7 @@ class Bucket(object):
         response = BucketModal.query.limit(limit).all()
         if not response:
             response = jsonify({'error': 'No bucketlist has been created'})
-            response.status_code = 404
+            response.status_code = 200
             return response
         else:
             if search:
@@ -115,7 +115,7 @@ class Bucket(object):
                 'error': 'bucketlist with id ' +
                          str(bucket_id) + ' not found'
             })
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         bucket_data = {
@@ -141,14 +141,14 @@ class Bucket(object):
         """
         if not bucket_name:
             response = jsonify({'Error': 'Missing Bucket name'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         bucket = BucketModal.query.filter_by(id=bucket_id,
                                              user_id=user_id).first()
         if not bucket:
             bucket = jsonify({'error': 'the bucket does not exist'})
-            bucket.status_code = 400
+            bucket.status_code = 200
             return bucket
 
         bucket.name = bucket_name
@@ -175,7 +175,7 @@ class Bucket(object):
                                              user_id=user_id).first()
         if not bucket:
             response = jsonify({'error': 'Bucket not found'})
-            response.status_code = 400
+            response.status_code = 200
             return response
 
         items = ItemModal.query.filter_by(bucket_id=bucket_id)
