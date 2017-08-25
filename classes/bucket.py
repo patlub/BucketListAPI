@@ -24,7 +24,7 @@ class Bucket(object):
         bucket = BucketModal(name=name, desc=desc, user_id=user_id)
         if bucket.query.filter_by(name=name).first():
             response = jsonify({'Error': 'Bucket name Already exists'})
-            response.status_code = 200
+            response.status_code = 409
             return response
 
         bucket.save()
@@ -150,6 +150,12 @@ class Bucket(object):
             bucket = jsonify({'error': 'the bucket does not exist'})
             bucket.status_code = 200
             return bucket
+
+        if bucket.query.filter_by(name=bucket_name).first():
+            response = jsonify({'Error': 'Bucket name Already exists'})
+            response.status_code = 409
+            return response
+
 
         bucket.name = bucket_name
         bucket.desc = desc
