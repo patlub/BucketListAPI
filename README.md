@@ -108,4 +108,4 @@ To run tests with nose, run:
  `nosetests`
 
 And you should see 
->All 37 tests Passed
+>All 43 tests Passed
