@@ -156,7 +156,6 @@ class Bucket(object):
             response.status_code = 409
             return response
 
-
         bucket.name = bucket_name
         bucket.desc = desc
         bucket.update()
