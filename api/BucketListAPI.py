@@ -7,7 +7,7 @@ from classes.authenticate import Authenticate
 from classes.bucket import Bucket
 from classes.item import Item
 
-app = create_app('ProductionEnv')
+app = create_app('TestingEnv')
 
 
 @app.route('/', methods=['GET'])
@@ -241,6 +241,7 @@ def invalid_token():
     response = jsonify({'Error': 'Invalid Token'})
     response.status_code = 400
     return response
+
 
 def invalid_keys():
     response = jsonify({'Error': 'Invalid Keys detected'})
