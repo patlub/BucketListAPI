@@ -57,7 +57,7 @@ class BucketTestCase(unittest.TestCase):
         })
         response = self.client.post('/buckets', data=bucket,
                                     headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 409)
         self.assertIn('Bucket name Already exists', response.data.decode())
 
     def test_get_bucket_when_DB_is_empty(self):
@@ -159,6 +159,20 @@ class BucketTestCase(unittest.TestCase):
                                    headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 200)
         self.assertIn('Missing', response.data.decode())
+
+    def test_update_bucket_with_same_name(self):
+        """Should return 200 for bucket updates"""
+
+        # First add bucket
+        self.test_add_bucket_successfully()
+        bucket = json.dumps({
+            'bucket': 'Travel',
+            'desc': 'Test Foods'
+        })
+        response = self.client.put('/buckets/1', data=bucket,
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 409)
+        self.assertIn('Bucket name Already exists', response.data.decode())
 
     def test_update_bucket_successfully(self):
         """Should return 200 for bucket updates"""
