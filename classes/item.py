@@ -90,7 +90,8 @@ class Item(object):
             response.status_code = 200
             return response
 
-        if not isinstance(new_item_status, bool):
+        allowed_status = ["true", "false"]
+        if new_item_status not in allowed_status:
             response = jsonify({'Error': 'status should be true or false'})
             response.status_code = 409
             return response

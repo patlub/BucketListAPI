@@ -51,7 +51,10 @@ class ItemTestCase(unittest.TestCase):
         self.client.post('/buckets', data=bucket,
                          headers={"Authorization": self.token})
 
-        item = json.dumps({'item': 'Go to Nairobi'})
+        item = json.dumps({
+            'item': 'Go to Nairobi',
+            'status' : "false"
+        })
         response = self.client.post('/buckets/1/items', data=item,
                                     headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
@@ -93,7 +96,7 @@ class ItemTestCase(unittest.TestCase):
 
         item = json.dumps({
             'item': '',
-            'status': False
+            'status': ''
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
@@ -105,7 +108,7 @@ class ItemTestCase(unittest.TestCase):
 
         item = json.dumps({
             'item': 'Go to New York',
-            'status': False
+            'status': "false"
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
@@ -124,7 +127,7 @@ class ItemTestCase(unittest.TestCase):
                          headers={"Authorization": self.token})
         item = json.dumps({
             'item': 'Go to New York',
-            'status': False
+            'status': "false"
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
@@ -151,7 +154,7 @@ class ItemTestCase(unittest.TestCase):
         self.test_add_item_successfully()
         item = json.dumps({
             'item': 'Go to Silicon Valley',
-            'status': False
+            'status': "false"
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
