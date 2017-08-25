@@ -28,7 +28,8 @@ class Item(object):
                     'id': data.id,
                     'name': data.name,
                     'status': data.status,
-                    'date_added': data.date_added
+                    'date_added': data.date_added,
+                    'bucket_id' : data.bucket_id
                 }
                 item_data.append(final)
             response = jsonify(item_data)
