@@ -93,7 +93,7 @@ class ItemTestCase(unittest.TestCase):
 
         item = json.dumps({
             'item': '',
-            'status': ''
+            'status': False
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
@@ -105,7 +105,7 @@ class ItemTestCase(unittest.TestCase):
 
         item = json.dumps({
             'item': 'Go to New York',
-            'status': ''
+            'status': False
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
@@ -124,7 +124,7 @@ class ItemTestCase(unittest.TestCase):
                          headers={"Authorization": self.token})
         item = json.dumps({
             'item': 'Go to New York',
-            'status': ''
+            'status': False
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
@@ -132,18 +132,30 @@ class ItemTestCase(unittest.TestCase):
         self.assertIn('item with id 1 does not exist',
                       response.data.decode())
 
+    def test_edit_item_with_invalid_status(self):
+        """Should return 201 for item edited"""
+
+        self.test_add_item_successfully()
+        item = json.dumps({
+            'item': 'Go to Silicon Valley',
+            'status': "hello"
+        })
+        response = self.client.put('/buckets/1/items/1', data=item,
+                                   headers={"Authorization": self.token})
+        self.assertEqual(response.status_code, 409)
+        self.assertIn('status should be true or false', response.data.decode())
+
     def test_edit_item_succesfully(self):
         """Should return 201 for item edited"""
 
         self.test_add_item_successfully()
         item = json.dumps({
             'item': 'Go to Silicon Valley',
-            'status': ''
+            'status': False
         })
         response = self.client.put('/buckets/1/items/1', data=item,
                                    headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
-        self.assertIn('Successfully updated item', response.data.decode())
         self.assertIn('Go to Silicon Valley', response.data.decode())
 
     def test_delete_item_that_doesnt_exist(self):

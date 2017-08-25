@@ -90,6 +90,11 @@ class Item(object):
             response.status_code = 200
             return response
 
+        if not isinstance(new_item_status, bool):
+            response = jsonify({'Error': 'status should be true or false'})
+            response.status_code = 409
+            return response
+
         bucket = BucketModal.query.filter_by(id=bucket_id,
                                              user_id=user_id).first()
         if not bucket:
@@ -110,8 +115,8 @@ class Item(object):
         item.status = new_item_status
         item.save()
         response = jsonify({
-            'Status': 'Successfully updated item',
-            'item_name': new_item_name
+            'item_name': new_item_name,
+            'status': item.status
         })
         response.status_code = 201
         return response
