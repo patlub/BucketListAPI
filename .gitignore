@@ -3,3 +3,4 @@
 *.pyc
 migrations
 .cache
+flask_api
