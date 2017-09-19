@@ -11,13 +11,13 @@ class Item(object):
     def get_items(bucket_id):
         """
         Gets all items
-        :param bucket_id: 
-        :return: 
+        :param bucket_id:
+        :return:
         """
         response = ItemModal.query.all()
         if not response:
             response = jsonify({'error': 'No item has been created'})
-            response.status_code = 200
+            response.status_code = 404
             return response
         else:
             res = [item for item in
@@ -40,10 +40,10 @@ class Item(object):
     def add_item(user_id, bucket_id, item_name):
         """
         Adds an item
-                
-        :param user_id: 
-        :param bucket_id: 
-        :param item_name: 
+
+        :param user_id:
+        :param bucket_id:
+        :param item_name:
         """
         if not item_name:
             response = jsonify({'Error': 'Missing Item name'})
@@ -69,7 +69,8 @@ class Item(object):
             'id': item.id,
             'name': item.name,
             'status': item.status,
-            'date_added': item.date_added
+            'date_added': item.date_added,
+            'bucket_id': bucket_id
         })
         response.status_code = 201
         return response
@@ -79,11 +80,11 @@ class Item(object):
         """
         Edits an item
 
-        :param user_id: 
-        :param bucket_id: 
-        :param item_id: 
-        :param new_item_name: 
-        :param new_item_status: 
+        :param user_id:
+        :param bucket_id:
+        :param item_id:
+        :param new_item_name:
+        :param new_item_status:
         """
         if not new_item_name and not new_item_status:
             response = jsonify({'Error': 'Missing parameters'})
@@ -116,8 +117,11 @@ class Item(object):
         item.status = new_item_status
         item.save()
         response = jsonify({
-            'item_name': new_item_name,
-            'status': item.status
+            'id': item.id,
+            'name': item.name,
+            'status': item.status,
+            'date_added': item.date_added,
+            'bucket_id': bucket_id
         })
         response.status_code = 201
         return response
@@ -127,7 +131,7 @@ class Item(object):
         """
         Deletes an item
 
-        :param item_id:  
+        :param item_id:
         """
         item = ItemModal.query.filter_by(id=item_id).first()
         if not item:

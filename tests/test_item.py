@@ -65,9 +65,8 @@ class ItemTestCase(unittest.TestCase):
 
         response = self.client.get('/items/1',
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('No item has been created',
-                      response.data.decode())
+        self.assertEqual(response.status_code, 404)
+        
 
     def test_get_items(self):
         """Should return all buckets items"""

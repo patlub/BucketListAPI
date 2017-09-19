@@ -13,7 +13,7 @@ class UserModal(db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(200))
-    # buckets = db.relationship('BucketModal', backref='user', lazy='dynamic')
+    # buckets = db.relationship('BucketModal', backref='user', lazy='dynamic', cascade='delete')
 
     def __init__(self, email, password, name=None):
         self.email = email
@@ -61,7 +61,7 @@ class BucketModal(db.Model):
     """
     __tablename__ = 'buckets'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(50), unique=True)
     desc = db.Column(db.String(100))
     date_added = db.Column(db.DateTime, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

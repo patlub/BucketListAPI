@@ -83,7 +83,7 @@ class Bucket(object):
                 bucketlist_data = []
                 if not res:
                     response = jsonify({
-                        'error': 'No bucketlists have been created'
+                        # 'error': 'No bucketlists have been created'
                     })
                     response.status_code = 200
                     return response
@@ -151,10 +151,10 @@ class Bucket(object):
             bucket.status_code = 200
             return bucket
 
-        if bucket.query.filter_by(name=bucket_name).first():
-            response = jsonify({'Error': 'Bucket name Already exists'})
-            response.status_code = 409
-            return response
+        # if bucket.query.filter_by(name=bucket_name).first():
+        #     response = jsonify({'Error': 'Bucket name Already exists'})
+        #     response.status_code = 409
+        #     return response
 
         bucket.name = bucket_name
         bucket.desc = desc

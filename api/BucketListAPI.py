@@ -7,7 +7,7 @@ from classes.authenticate import Authenticate
 from classes.bucket import Bucket
 from classes.item import Item
 
-app = create_app('TestingEnv')
+app = create_app('DevelopmentEnv')
 
 
 @app.route('/', methods=['GET'])
