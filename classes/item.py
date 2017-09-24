@@ -16,8 +16,8 @@ class Item(object):
         """
         response = ItemModal.query.all()
         if not response:
-            response = jsonify({'error': 'No item has been created'})
-            response.status_code = 404
+            response = jsonify({})
+            response.status_code = 200
             return response
         else:
             res = [item for item in
@@ -59,21 +59,21 @@ class Item(object):
             return response
 
         item = ItemModal(name=item_name, bucket_id=bucket_id)
-        if item.query.filter_by(name=item_name).first():
-            response = jsonify({'Error': 'item name Already exists'})
-            response.status_code = 200
+        try:
+            item.save()
+            response = jsonify({
+                'id': item.id,
+                'name': item.name,
+                'status': item.status,
+                'date_added': item.date_added,
+                'bucket_id': bucket_id
+            })
+            response.status_code = 201
             return response
-
-        item.save()
-        response = jsonify({
-            'id': item.id,
-            'name': item.name,
-            'status': item.status,
-            'date_added': item.date_added,
-            'bucket_id': bucket_id
-        })
-        response.status_code = 201
-        return response
+        except:
+            response = jsonify({'Error': 'item name Already exists'})
+            response.status_code = 409
+            return response
 
     @staticmethod
     def edit_item(user_id, bucket_id, item_id, new_item_name, new_item_status):

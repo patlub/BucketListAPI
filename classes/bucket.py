@@ -22,21 +22,21 @@ class Bucket(object):
             return response
 
         bucket = BucketModal(name=name, desc=desc, user_id=user_id)
-        if bucket.query.filter_by(name=name).first():
+        try:
+            bucket.save()
+            response = jsonify({
+                'id': bucket.id,
+                'name': bucket.name,
+                'desc': bucket.desc,
+                'date_added': bucket.date_added,
+                'user_id': bucket.user_id
+            })
+            response.status_code = 201
+            return response
+        except:
             response = jsonify({'Error': 'Bucket name Already exists'})
             response.status_code = 409
             return response
-
-        bucket.save()
-        response = jsonify({
-            'id': bucket.id,
-            'name': bucket.name,
-            'desc': bucket.desc,
-            'date_added': bucket.date_added,
-            'user_id': bucket.user_id
-        })
-        response.status_code = 201
-        return response
 
     @staticmethod
     def get_buckets(user_id, search, limit=None):
