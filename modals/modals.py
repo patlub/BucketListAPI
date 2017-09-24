@@ -2,7 +2,7 @@ from datetime import datetime
 from api import db
 from werkzeug.security import generate_password_hash, \
     check_password_hash
-
+from sqlalchemy import UniqueConstraint
 
 class UserModal(db.Model):
     """
@@ -61,10 +61,11 @@ class BucketModal(db.Model):
     """
     __tablename__ = 'buckets'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), unique=True)
+    name = db.Column(db.String(50))
     desc = db.Column(db.String(100))
     date_added = db.Column(db.DateTime, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='unq_b_name'),)
     # items = db.relationship('ItemModal', backref='bucket', lazy='dynamic', cascade='delete')
 
     def __init__(self, name, desc, user_id):
@@ -108,6 +109,8 @@ class ItemModal(db.Model):
     status = db.Column(db.String(5), default=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow())
     bucket_id = db.Column(db.Integer, db.ForeignKey('buckets.id'))
+    __table_args__ = (db.UniqueConstraint('bucket_id', 'name', name='unq_i_name'),)
+
 
     def __init__(self, name, bucket_id):
         self.name = name
