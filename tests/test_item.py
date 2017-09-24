@@ -65,7 +65,7 @@ class ItemTestCase(unittest.TestCase):
 
         response = self.client.get('/items/1',
                                    headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         
 
     def test_get_items(self):
@@ -80,14 +80,14 @@ class ItemTestCase(unittest.TestCase):
                       response.data.decode())
 
     def test_add_duplicate_item(self):
-        """Should return 400 for duplicate item"""
+        """Should return 409 for duplicate item"""
 
         # First add the item
         self.test_add_item_successfully()
         item = json.dumps({'item': 'Go to Nairobi'})
         response = self.client.post('/buckets/1/items', data=item,
                                     headers={"Authorization": self.token})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 409)
         self.assertIn('item name Already exists', response.data.decode())
 
     def test_edit_item_with_no_name(self):
