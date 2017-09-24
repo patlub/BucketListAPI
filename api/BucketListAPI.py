@@ -7,7 +7,7 @@ from classes.authenticate import Authenticate
 from classes.bucket import Bucket
 from classes.item import Item
 
-app = create_app('DevelopmentEnv')
+app = create_app('TestingEnv')
 
 
 @app.route('/', methods=['GET'])
@@ -221,8 +221,8 @@ def edit_item(bucket_id, item_id):
         return invalid_keys()
 
 
-@app.route('/buckets/<int:bucket_id>/items/<int:item_id>', methods=['DELETE'])
-def delete_item(bucket_id, item_id):
+@app.route('/items/<int:item_id>', methods=['DELETE'])
+def delete_item(item_id):
     """Method to handle creating a bucket"""
     try:
         token = get_token()

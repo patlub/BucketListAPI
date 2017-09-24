@@ -163,7 +163,7 @@ class ItemTestCase(unittest.TestCase):
     def test_delete_item_that_doesnt_exist(self):
         """Should return 400 for missing item"""
 
-        response = self.client.delete('/buckets/1/items/1',
+        response = self.client.delete('/items/1',
                                       headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 200)
         self.assertIn('Item with id 1 does not exist', response.data.decode())
@@ -172,7 +172,7 @@ class ItemTestCase(unittest.TestCase):
         """Should return 201 for item deleted"""
 
         self.test_add_item_successfully()
-        response = self.client.delete('/buckets/1/items/1',
+        response = self.client.delete('/items/1',
                                       headers={"Authorization": self.token})
         self.assertEqual(response.status_code, 201)
         self.assertIn('Item deleted', response.data.decode())

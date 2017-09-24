@@ -33,7 +33,7 @@ class Bucket(object):
             })
             response.status_code = 201
             return response
-        except:
+        except Exception:
             response = jsonify({'Error': 'Bucket name Already exists'})
             response.status_code = 409
             return response

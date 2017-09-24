@@ -70,7 +70,7 @@ class Item(object):
             })
             response.status_code = 201
             return response
-        except:
+        except Exception:
             response = jsonify({'Error': 'item name Already exists'})
             response.status_code = 409
             return response
