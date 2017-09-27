@@ -49,7 +49,7 @@ class Bucket(object):
 
         response = BucketModal.query.limit(limit).all()
         if not response:
-            response = jsonify({'error': 'No bucketlist has been created'})
+            response = jsonify([])
             response.status_code = 200
             return response
         else:
