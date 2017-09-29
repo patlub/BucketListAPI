@@ -61,7 +61,7 @@ class AuthenticationTestCase(unittest.TestCase):
         })
         self.client.post('/auth/register', data=user)
         response = self.client.post('/auth/register', data=user)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 401)
         self.assertIn('Email Already exists', response.data.decode())
 
     def test_successfull_registration(self):
@@ -105,7 +105,7 @@ class AuthenticationTestCase(unittest.TestCase):
             'password': 'incorrect'
         })
         response = self.client.post('/auth/login', data=user)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 401)
         self.assertIn('Incorrect email or password', response.data.decode())
 
     def test_successful_login(self):

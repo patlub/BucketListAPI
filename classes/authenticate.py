@@ -38,7 +38,7 @@ class Authenticate(object):
 
         if user.query.filter_by(email=email).first():
             response = jsonify({'Error': 'Email Already exists'})
-            response.status_code = 200
+            response.status_code = 401
             return response
 
         user.save()
@@ -83,7 +83,7 @@ class Authenticate(object):
             return response
 
         response = jsonify({'Error': 'Incorrect email or password'})
-        response.status_code = 200
+        response.status_code = 401
         return response
 
     @staticmethod
