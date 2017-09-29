@@ -52,7 +52,7 @@ def login():
 def auth_success(response):
     if response.status_code == 201:
         data = json.loads(response.data.decode())
-        data['id'] = encode_auth_token(data['id']).decode()
+        data['token'] = encode_auth_token(data['token']).decode()
         response = jsonify(data)
         response.status_code = 201
     return response

@@ -22,7 +22,7 @@ class BucketTestCase(unittest.TestCase):
         })
         response = self.client.post('/auth/register', data=user)
         json_repr = json.loads(response.data.decode())
-        self.token = json_repr['id']
+        self.token = json_repr['token']
 
     def test_add_bucket_without_bucket_name(self):
         """Should return 400 for missing bucket name"""

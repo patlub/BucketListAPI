@@ -44,7 +44,7 @@ class Authenticate(object):
         user.save()
         response = jsonify({
             'Status': user.email + ' Successfully registered',
-            'id': user.id
+            'token': user.id
         })
         response.status_code = 201
         return response
@@ -77,7 +77,7 @@ class Authenticate(object):
                                              password):
             response = jsonify({
                 'Status': user.email + ' Login Successful',
-                'id': user_data.id
+                'token': user_data.id
             })
             response.status_code = 201
             return response
