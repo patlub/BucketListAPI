@@ -239,7 +239,7 @@ def delete_item(item_id):
 
 def invalid_token():
     response = jsonify({'Error': 'Invalid Token'})
-    response.status_code = 400
+    response.status_code = 401
     return response
 
 
