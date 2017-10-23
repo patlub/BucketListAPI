@@ -1,1 +1,1 @@
-web: waitress-serve --port=$PORT patrickluboobi-bucket-list-api.wsgi:application
+web: waitress-serve --port=$PORT run.wsgi:application
